@@ -2,8 +2,8 @@
 //  Image_With_Bordered_StringPlugIn.h
 //  Image With Bordered String
 //
-//  Created by 松本 光一 on 2014/11/09.
-//  Copyright (c) 2014年 Koichi MATSUMOTO. All rights reserved.
+//  Created by Koichi MATSUMOTO on 2014/11/09.
+//  Copyright (c) 2014 Koichi MATSUMOTO. All rights reserved.
 //
 
 #import <Quartz/Quartz.h>

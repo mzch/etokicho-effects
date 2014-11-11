@@ -2,7 +2,7 @@
 //  Image_With_Bordered_StringPlugIn.m
 //  Image With Bordered String
 //
-//  Created by 松本 光一 on 2014/11/09.
+//  Created by Koichi MATSUMOTO on 2014/11/09.
 //  Copyright (c) 2014年 Koichi MATSUMOTO. All rights reserved.
 //
 
@@ -38,8 +38,6 @@
 + (NSDictionary *)attributesForPropertyPortWithKey:(NSString *)key
 {
 	// Specify the optional attributes for property based ports (QCPortAttributeNameKey, QCPortAttributeDefaultValueKey...).
-    NSLog(@"Image WIth Bordered String:[key = %@", key);
-
     if ([key isEqualToString:PLUGIN_PORTKEY_STRING])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PLUGIN_PORTNAME_STRING, QCPortAttributeNameKey,
