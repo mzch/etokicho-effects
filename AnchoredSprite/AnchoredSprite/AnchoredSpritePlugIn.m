@@ -264,6 +264,7 @@
 
     // Set the color.
     glColor4d(colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]);
+    
     // Render the textured quad by mapping the texture coordinates to the vertices
     bounds = [context bounds];
     retio = (bounds.size.height / bounds.size.width);
@@ -278,13 +279,15 @@
         glVertex3d(1.0f, retio * (-1.0f), 0.0f);   // lower right
     glEnd();
     
+    glFlush();
+    
     if (textureName)
     {
         // Unbind the texture from the texture unit.
         [image unbindTextureRepresentationFromCGLContext:cgl_ctx textureUnit: GL_TEXTURE0];
     }
 
-     glDisable(GL_BLEND);  //ブレンド無効化
+    glDisable(GL_BLEND);  //ブレンド無効化
 
     // Restore
     glMatrixMode(GL_MODELVIEW);

@@ -19,6 +19,11 @@
 #define CLR_BLEND_SCREEN    (5)
 #define CLR_BLEND_XOR       (6)
 
+// Fog
+#define FOGMODE_NONE        (0)
+#define FOGMODE_LINEAR      (1)
+#define FOGMODE_EXP         (2)
+#define FOGMODE_EXP2        (3)
 
 // キー値、名称、デフォルト値
 #define PKEY_INPUTIMAGE     @"inputImage"
@@ -65,7 +70,7 @@
 #define PDEF_INPUTXSCALE    1.0f
 #define PDEF_INPUTYSCALE    1.0f
 #define PDEF_INPUTZSCALE    1.0f
-#define PDEF_INPUTCOLOR     CGColorCreateGenericRGB(1.0, 1.0, 1.0, 1.0)
+#define PDEF_INPUTCOLOR     CGColorCreateGenericRGB(1.0f, 1.0f, 1.0f, 1.0f)
 #define PDEF_INPUTBLENDMOD  CLR_BLEND_DEFAULT
 
 @interface AnchoredSpritePlugIn : QCPlugIn
