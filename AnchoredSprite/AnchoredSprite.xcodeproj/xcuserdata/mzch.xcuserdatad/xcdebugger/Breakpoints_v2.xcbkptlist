@@ -15,8 +15,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "145"
             endingLineNumber = "145"
-            landmarkName = "-execute:atTime:withArguments:"
-            landmarkType = "5">
+            landmarkName = "@implementation AnchoredSpritePlugIn(Execution)"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

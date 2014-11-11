@@ -10,6 +10,17 @@
 
 // Constant definitions
 
+// Blend Mode
+#define CLR_BLEND_DEFAULT   (0)
+#define CLR_BLEND_ALPHA     (1)
+#define CLR_BLEND_ADD       (2)
+#define CLR_BLEND_MULTI     (3)
+#define CLR_BLAND_INVERT    (4)
+#define CLR_BLEND_SCREEN    (5)
+#define CLR_BLEND_XOR       (6)
+
+
+// キー値、名称、デフォルト値
 #define PKEY_INPUTIMAGE     @"inputImage"
 #define PKEY_INPUTANCHORX   @"inputAnchorX"
 #define PKEY_INPUTANCHORY   @"inputAnchorY"
@@ -24,6 +35,7 @@
 #define PKEY_INPUTYSCALE    @"inputYScale"
 #define PKEY_INPUTZSCALE    @"inputZScale"
 #define PKEY_INPUTCOLOR     @"inputColor"
+#define PKEY_INPUTBLENDMOD  @"inputBlendMode"
 
 #define PNAME_INPUTIMAGE    @"Image"
 #define PNAME_INPUTANCHORX  @"Anchor X"
@@ -39,6 +51,7 @@
 #define PNAME_INPUTYSCALE   @"Y Scale"
 #define PNAME_INPUTZSCALE   @"Z Scale"
 #define PNAME_INPUTCOLOR    @"Color"
+#define PNAME_INPUTBLENDMOD @"Blend Mode"
 
 #define PDEF_INPUTANCHORX   0.0f
 #define PDEF_INPUTANCHORY   0.0f
@@ -53,6 +66,7 @@
 #define PDEF_INPUTYSCALE    1.0f
 #define PDEF_INPUTZSCALE    1.0f
 #define PDEF_INPUTCOLOR     CGColorCreateGenericRGB(1.0, 1.0, 1.0, 1.0)
+#define PDEF_INPUTBLENDMOD  CLR_BLEND_DEFAULT
 
 @interface AnchoredSpritePlugIn : QCPlugIn
 
@@ -73,5 +87,6 @@
 @property (assign) double inputYScale;
 @property (assign) double inputZScale;
 @property (assign) CGColorRef inputColor;
+@property (assign) NSUInteger inputBlendMode;
 
 @end

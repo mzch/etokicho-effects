@@ -31,6 +31,7 @@
 @dynamic inputYScale;
 @dynamic inputZScale;
 @dynamic inputColor;
+@dynamic inputBlendMode;
 
 // Here you need to declare the input / output properties as dynamic as Quartz Composer will handle their implementation
 //@dynamic inputFoo, outputBar;
@@ -112,6 +113,11 @@
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTCOLOR, QCPortAttributeNameKey,
                 PDEF_INPUTCOLOR, QCPortAttributeDefaultValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTBLENDMOD])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTBLENDMOD, QCPortAttributeNameKey,
+                [NSNumber numberWithFloat:PDEF_INPUTBLENDMOD], QCPortAttributeDefaultValueKey,
                 nil];
 
     return nil;
@@ -205,6 +211,12 @@
     // Save and set the modelview matrix.
     glGetIntegerv(GL_MATRIX_MODE, &saveMode);
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // Color mode
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_BLEND);  //ブレンド有効化
+    //
     glPushMatrix();
     // Translate the matrix
     glTranslated(x, y, z);
@@ -224,8 +236,34 @@
                                 normalizeCoordinates:YES];
     }
 
+    // ブレンド処理
+     switch (self.inputBlendMode)
+     {
+     case CLR_BLEND_ALPHA:          // ― アルファブレンド
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        break;
+     case CLR_BLEND_ADD:            // ― 加算合成
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        break;
+     case CLR_BLEND_MULTI:          // ― 乗算合成
+        glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+        break;
+     case CLR_BLAND_INVERT:         // ― 反転合成
+        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+        break;
+     case CLR_BLEND_SCREEN:         // ― スクリーン合成
+        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
+        break;
+     case CLR_BLEND_XOR:            // ― 排他的論理和合成
+        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
+        break;
+     default:
+        glBlendFunc(GL_ONE, GL_ZERO);
+        break;
+     }
+
     // Set the color.
-    glColor4f(colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]);
+    glColor4d(colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]);
     // Render the textured quad by mapping the texture coordinates to the vertices
     bounds = [context bounds];
     retio = (bounds.size.height / bounds.size.width);
@@ -245,6 +283,8 @@
         // Unbind the texture from the texture unit.
         [image unbindTextureRepresentationFromCGLContext:cgl_ctx textureUnit: GL_TEXTURE0];
     }
+
+     glDisable(GL_BLEND);  //ブレンド無効化
 
     // Restore
     glMatrixMode(GL_MODELVIEW);
