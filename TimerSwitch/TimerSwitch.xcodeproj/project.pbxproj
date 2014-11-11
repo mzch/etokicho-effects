@@ -1,0 +1,274 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A44945681A122F1D00A19624 /* TimerSwitchPlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = A44945671A122F1D00A19624 /* TimerSwitchPlugIn.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A44945611A122F1D00A19624 /* TimerSwitch.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimerSwitch.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		A44945651A122F1D00A19624 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A44945661A122F1D00A19624 /* TimerSwitchPlugIn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimerSwitchPlugIn.h; sourceTree = "<group>"; };
+		A44945671A122F1D00A19624 /* TimerSwitchPlugIn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimerSwitchPlugIn.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A449455D1A122F1D00A19624 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A44945571A122F1D00A19624 = {
+			isa = PBXGroup;
+			children = (
+				A44945631A122F1D00A19624 /* TimerSwitch */,
+				A44945621A122F1D00A19624 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A44945621A122F1D00A19624 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A44945611A122F1D00A19624 /* TimerSwitch.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A44945631A122F1D00A19624 /* TimerSwitch */ = {
+			isa = PBXGroup;
+			children = (
+				A44945661A122F1D00A19624 /* TimerSwitchPlugIn.h */,
+				A44945671A122F1D00A19624 /* TimerSwitchPlugIn.m */,
+				A44945641A122F1D00A19624 /* Supporting Files */,
+			);
+			path = TimerSwitch;
+			sourceTree = "<group>";
+		};
+		A44945641A122F1D00A19624 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A44945651A122F1D00A19624 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A44945601A122F1D00A19624 /* TimerSwitch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A449456B1A122F1D00A19624 /* Build configuration list for PBXNativeTarget "TimerSwitch" */;
+			buildPhases = (
+				A449455C1A122F1D00A19624 /* Sources */,
+				A449455D1A122F1D00A19624 /* Frameworks */,
+				A449455E1A122F1D00A19624 /* Resources */,
+				A449455F1A122F1D00A19624 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TimerSwitch;
+			productName = TimerSwitch;
+			productReference = A44945611A122F1D00A19624 /* TimerSwitch.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A44945581A122F1D00A19624 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Koichi MATSUMOTO";
+				TargetAttributes = {
+					A44945601A122F1D00A19624 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+				};
+			};
+			buildConfigurationList = A449455B1A122F1D00A19624 /* Build configuration list for PBXProject "TimerSwitch" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A44945571A122F1D00A19624;
+			productRefGroup = A44945621A122F1D00A19624 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A44945601A122F1D00A19624 /* TimerSwitch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A449455E1A122F1D00A19624 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A449455F1A122F1D00A19624 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This shell script simply copies the built plug-in to \"~/Library/Graphics/Quartz Composer Plug-Ins\" and overrides any previous version at that location\n\nmkdir -p \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins\"\nrm -rf \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/TimerSwitch.plugin\"\ncp -rf \"$BUILT_PRODUCTS_DIR/TimerSwitch.plugin\" \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A449455C1A122F1D00A19624 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A44945681A122F1D00A19624 /* TimerSwitchPlugIn.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A44945691A122F1D00A19624 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A449456A1A122F1D00A19624 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A449456C1A122F1D00A19624 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TimerSwitch/Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		A449456D1A122F1D00A19624 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = TimerSwitch/Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A449455B1A122F1D00A19624 /* Build configuration list for PBXProject "TimerSwitch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A44945691A122F1D00A19624 /* Debug */,
+				A449456A1A122F1D00A19624 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A449456B1A122F1D00A19624 /* Build configuration list for PBXNativeTarget "TimerSwitch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A449456C1A122F1D00A19624 /* Debug */,
+				A449456D1A122F1D00A19624 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A44945581A122F1D00A19624 /* Project object */;
+}
