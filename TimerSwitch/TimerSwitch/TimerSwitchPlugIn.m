@@ -130,13 +130,8 @@
         {
             self.outputIsInTime = YES;
             self.outputMiliTimeLeft = EndTime - CurrentTime;
-<<<<<<< HEAD
             self.outputTimeLeft = (double) (EndTime - StartTime) / 1000.0f;
             self.outputProgress = (double)(CurrentTime - StartTime) / (double)(EndTime - StartTime);
-=======
-            self.outputTimeLeft = self.outputMiliTimeLeft / 1000.0f;
-            self.outputProgress = (CurrentTime - StartTime) / (EndTime - StartTime);
->>>>>>> 536bb45c4afe869cf1d050d7011cafe5acb4e211
         }
         else
         {
