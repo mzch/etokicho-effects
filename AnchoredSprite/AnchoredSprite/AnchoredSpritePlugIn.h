@@ -10,20 +10,64 @@
 
 // Constant definitions
 
-// Blend Mode
-#define CLR_BLEND_DEFAULT   (0)
-#define CLR_BLEND_ALPHA     (1)
-#define CLR_BLEND_ADD       (2)
-#define CLR_BLEND_MULTI     (3)
-#define CLR_BLAND_INVERT    (4)
-#define CLR_BLEND_SCREEN    (5)
-#define CLR_BLEND_XOR       (6)
+// ブレンドモード
+#define BLEND_NAME_DEFAULT  @"デフォルト"
+#define BLEND_NAME_ALPHA    @"アルファブレンド"
+#define BLEND_NAME_ADD      @"加算合成"
+#define BLEND_NAME_MULTI    @"乗算合成"
+#define BLEND_NAME_INVERT   @"反転合成"
+#define BLEND_NAME_SCREEN   @"スクリーン合成"
+#define BLEND_NAME_XOR      @"排他的論理和合成"
 
-// Fog
-#define FOGMODE_NONE        (0)
-#define FOGMODE_LINEAR      (1)
-#define FOGMODE_EXP         (2)
-#define FOGMODE_EXP2        (3)
+enum BlendMode {
+    ClrBlendMode_Default = 0,
+    ClrBlendMode_Alpha,
+    ClrBlendMode_Add,
+    ClrBlendMode_Multi,
+    ClrBlendMode_Invert,
+    ClrBlendMode_Screen,
+    ClrBlendMode_Xor,
+    NumOfBlendMode
+};
+
+// ブレンディング
+#define BLENDING_REPLACE    @"Replace"
+#define BLENDING_OVER       @"Over"
+#define BLENDING_ADD        @"Add"
+
+enum Blending {
+    Blending_Replace = 0,
+    Blending_Øver,
+    Blending_Add,
+    NumOfBlending
+};
+#define PDEF_BLENDING      Blending_Øver
+#define PMAX_BLENDING      (NumOfBlending - 1)
+// Depth Test
+#define DEPTHTEST_NONE      @"None"
+#define DEPTHTEST_RW        @"Read/Write"
+#define DEPTHTEST_RO        @"Read Only"
+enum DepthTest {
+    None = 0,
+    ReadWrite,
+    ReadØnly,
+    NumOfDepthTest
+};
+#define PDEF_DEPTHTEST      ReadWrite
+#define PMAX_DEPTHTEST      (NumOfDepthTest - 1)
+
+// Face Culling
+#define CULLING_NONE        @"None"
+#define CULLING_FRONT       @"Front Face"
+#define CULLING_BACK        @"Back Face"
+enum FaceCUlling {
+    NoFace = 0,
+    BackFace,
+    FrontFåce,
+    NumOfFaceCulling
+};
+#define PDEF_FACECULLING    NoFace
+#define PMAX_FACECULLING    (NumOfFaceCulling - 1)
 
 // キー値、名称、デフォルト値
 #define PKEY_INPUTIMAGE     @"inputImage"
@@ -41,6 +85,8 @@
 #define PKEY_INPUTZSCALE    @"inputZScale"
 #define PKEY_INPUTCOLOR     @"inputColor"
 #define PKEY_INPUTBLENDMOD  @"inputBlendMode"
+#define PKEY_INPUTDEPTHTEST @"inputDepthTest"
+#define PKEY_INPUTCULLING   @"inputCulling"
 
 #define PNAME_INPUTIMAGE    @"Image"
 #define PNAME_INPUTANCHORX  @"Anchor X"
@@ -57,6 +103,8 @@
 #define PNAME_INPUTZSCALE   @"Z Scale"
 #define PNAME_INPUTCOLOR    @"Color"
 #define PNAME_INPUTBLENDMOD @"Blend Mode"
+#define PNAME_INPUTDEPTHTEST @"Depth Testing"
+#define PNAME_INPUTCULLING   @"Face Culling"
 
 #define PDEF_INPUTANCHORX   0.0f
 #define PDEF_INPUTANCHORY   0.0f
@@ -71,7 +119,8 @@
 #define PDEF_INPUTYSCALE    1.0f
 #define PDEF_INPUTZSCALE    1.0f
 #define PDEF_INPUTCOLOR     CGColorCreateGenericRGB(1.0f, 1.0f, 1.0f, 1.0f)
-#define PDEF_INPUTBLENDMOD  CLR_BLEND_DEFAULT
+#define PDEF_INPUTBLENDMOD  ClrBlendMode_Default
+#define PMAX_INPUTBLENDMOD  (NumOfBlendMode - 1)
 
 @interface AnchoredSpritePlugIn : QCPlugIn
 
@@ -93,5 +142,8 @@
 @property (assign) double inputZScale;
 @property (assign) CGColorRef inputColor;
 @property (assign) NSUInteger inputBlendMode;
+/* special control ports. */
+@property (assign) NSUInteger inputDepthTest;
+@property (assign) NSUInteger inputCulling;
 
 @end

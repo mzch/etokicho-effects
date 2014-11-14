@@ -8,11 +8,16 @@
 
 // It's highly recommended to use CGL macros instead of changing the current context for plug-ins that perform OpenGL rendering
 #import <OpenGL/CGLMacro.h>
+#import <OpenGL/glu.h>
 
 #import "AnchoredSpritePlugIn.h"
 
 #define	kQCPlugIn_Name				@"AnchoredSprite"
-#define	kQCPlugIn_Description		@"Translate, Scale and Rotate an input image at the specified point."
+#define	kQCPlugIn_Description		@"This patch allow to translate, scale and rotate the input image at the specified point."
+
+static NSArray * blendOptions;
+static NSArray * depthTestOptions;
+static NSArray * CullingOptions;
 
 @implementation AnchoredSpritePlugIn
 
@@ -32,6 +37,8 @@
 @dynamic inputZScale;
 @dynamic inputColor;
 @dynamic inputBlendMode;
+@dynamic inputDepthTest;
+@dynamic inputCulling;
 
 // Here you need to declare the input / output properties as dynamic as Quartz Composer will handle their implementation
 //@dynamic inputFoo, outputBar;
@@ -115,10 +122,35 @@
                 PDEF_INPUTCOLOR, QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTBLENDMOD])
+    {
+        blendOptions = [NSArray arrayWithObjects:BLEND_NAME_DEFAULT, @"-", BLEND_NAME_ALPHA, BLEND_NAME_ADD, BLEND_NAME_MULTI,BLEND_NAME_INVERT, BLEND_NAME_SCREEN, BLEND_NAME_XOR, nil];
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTBLENDMOD, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTBLENDMOD], QCPortAttributeDefaultValueKey,
+                blendOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTBLENDMOD], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTBLENDMOD], QCPortAttributeMaximumValueKey,
                 nil];
+    }
+    if ([key isEqualToString:PKEY_INPUTDEPTHTEST])
+    {
+        depthTestOptions = [NSArray arrayWithObjects:DEPTHTEST_NONE, DEPTHTEST_RW, DEPTHTEST_RO, nil];
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTDEPTHTEST, QCPortAttributeNameKey,
+                depthTestOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_DEPTHTEST], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_DEPTHTEST], QCPortAttributeMaximumValueKey,
+                nil];
+    }
+    if ([key isEqualToString:PKEY_INPUTCULLING])
+    {
+        CullingOptions = [NSArray arrayWithObjects:CULLING_NONE, CULLING_FRONT, CULLING_BACK, nil];
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTCULLING, QCPortAttributeNameKey,
+                CullingOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_FACECULLING], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_FACECULLING], QCPortAttributeMaximumValueKey,
+                nil];
+    }
 
     return nil;
 }
@@ -172,30 +204,10 @@
 	
 	The OpenGL context for rendering can be accessed and defined for CGL macros using:
      */
-    GLint         saveMode;
 	CGLContextObj cgl_ctx = [context CGLContextObj];
-    GLdouble      x = self.inputAnchorX;
-    GLdouble      y = self.inputAnchorY;
-    GLdouble      z = self.inputAnchorZ;
-    GLdouble     ox = self.inputAnchorX * (-1.0f);
-    GLdouble     oy = self.inputAnchorY * (-1.0f);
-    GLdouble     oz = self.inputAnchorZ * (-1.0f);
-    GLdouble     nx = self.inputDistX;
-    GLdouble     ny = self.inputDistY;
-    GLdouble     nz = self.inputDistZ;
-    GLdouble     ax = self.inputXAngle;
-    GLdouble     ay = self.inputYAngle;
-    GLdouble     az = self.inputZAngle;
-    GLdouble     sx = self.inputXScale;
-    GLdouble     sy = self.inputYScale;
-    GLdouble     sz = self.inputZScale;
-    GLenum       error;
-    GLdouble     retio;
     id<QCPlugInInputImageSource> image = self.inputImage;
-    const CGFloat * colorComponents = CGColorGetComponents(self.inputColor);
-    NSRect       bounds;
     GLuint       textureName = 0;
-
+    
     if(cgl_ctx == NULL)
         return NO;
 
@@ -208,26 +220,71 @@
              textureName = [image textureName];
          }
     }
+    
+    CGLSetCurrentContext(cgl_ctx);
+    GLint order = 1;
+    CGLSetParameter(cgl_ctx, kCGLCPSurfaceOrder, &order);
+    
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
     // Save and set the modelview matrix.
+    GLint         saveMode;
     glGetIntegerv(GL_MATRIX_MODE, &saveMode);
     glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
     glLoadIdentity();
 
-    // Color mode
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_BLEND);  //ブレンド有効化
-    //
-    glPushMatrix();
-    // Translate the matrix
-    glTranslated(x, y, z);
-    // Rotate the matrix
-    glRotated(ax, 1.0f, 0.0f, 0.0f);
-    glRotated(ay, 0.0f, 1.0f, 0.0f);
-    glRotated(az, 0.0f, 0.0f, 1.0f);
-    // Set New Position
-    glTranslated((ox * sx) + nx, (oy * sy) + ny, (oz * sz) + nz);
-    // Scale the matrix
-    glScaled(sx, sy, sz);
+    glEnable(GL_TEXTURE_2D);
+
+    // ブレンド処理
+    switch (self.inputBlendMode)
+    {
+        case ClrBlendMode_Alpha:          // ― アルファブレンド
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            break;
+        case ClrBlendMode_Add:            // ― 加算合成
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            break;
+        case ClrBlendMode_Multi:          // ― 乗算合成
+            glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+            break;
+        case ClrBlendMode_Invert:         // ― 反転合成
+            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+            break;
+        case ClrBlendMode_Screen:         // ― スクリーン合成
+            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
+            break;
+        case ClrBlendMode_Xor:            // ― 排他的論理和合成
+            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
+            break;
+        default:
+            glBlendFunc(GL_ONE, GL_ZERO);
+            break;
+        glEnable(GL_BLEND);
+    }
+    // Depth テスト
+    if (self.inputDepthTest != None)
+    {
+        if (self.inputDepthTest == ReadWrite)
+            glDepthMask(GL_TRUE);
+        else
+            glDepthMask(GL_FALSE);
+        
+        glEnable(GL_DEPTH_TEST);
+    }
+    // Fae CUlling
+    if (self.inputCulling != NoFace)
+    {
+        if (self.inputCulling == BackFace)
+            glCullFace(GL_BACK);
+        else
+            glCullFace(GL_FRONT);
+        
+        glEnable(GL_CULL_FACE);
+    }
+    // アルファテスト
+    glEnable(GL_ALPHA_TEST);
 
     if (textureName)
     {
@@ -235,59 +292,84 @@
                                          textureUnit:GL_TEXTURE0
                                 normalizeCoordinates:YES];
     }
+    
+    // Create a new Viewport
+    NSRect ibounds;
+    GLint curViewPort[4];
+    glGetIntegerv(GL_VIEWPORT, curViewPort);
+    GLuint ix = curViewPort[0] + curViewPort[2] / 2;
+    GLuint iy = curViewPort[1] + curViewPort[3] / 2;
+    ibounds = [image imageBounds];
+    ix -= ibounds.size.width  / 2;
+    iy -= ibounds.size.height / 2;
+    glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
 
-    // ブレンド処理
-     switch (self.inputBlendMode)
-     {
-     case CLR_BLEND_ALPHA:          // ― アルファブレンド
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        break;
-     case CLR_BLEND_ADD:            // ― 加算合成
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        break;
-     case CLR_BLEND_MULTI:          // ― 乗算合成
-        glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-        break;
-     case CLR_BLAND_INVERT:         // ― 反転合成
-        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-        break;
-     case CLR_BLEND_SCREEN:         // ― スクリーン合成
-        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
-        break;
-     case CLR_BLEND_XOR:            // ― 排他的論理和合成
-        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
-        break;
-     default:
-        glBlendFunc(GL_ONE, GL_ZERO);
-        break;
-     }
-
-    // Set the color.
-    glColor4d(colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]);
+    // Translate the matrix
+    GLdouble      x = self.inputAnchorX;
+    GLdouble      y = self.inputAnchorY;
+    GLdouble      z = self.inputAnchorZ;
+    glTranslated(x, y, z);
+    // Rotate the matrix
+    GLdouble     ax = self.inputXAngle;
+    GLdouble     ay = self.inputYAngle;
+    GLdouble     az = self.inputZAngle;
+    glRotated(ax, 1.0f, 0.0f, 0.0f);
+    glRotated(ay, 0.0f, 1.0f, 0.0f);
+    glRotated(az, 0.0f, 0.0f, 1.0f);
+    // Set New Position
+    GLdouble     ox = self.inputAnchorX * (-1.0f);
+    GLdouble     oy = self.inputAnchorY * (-1.0f);
+    GLdouble     oz = self.inputAnchorZ * (-1.0f);
+    GLdouble     nx = self.inputDistX;
+    GLdouble     ny = self.inputDistY;
+    GLdouble     nz = self.inputDistZ;
+    GLdouble     sx = self.inputXScale;
+    GLdouble     sy = self.inputYScale;
+    GLdouble     sz = self.inputZScale;
+    glTranslated((ox * sx) + nx, (oy * sy) + ny, (oz * sz) + nz);
+    // Scale the matrix
+    glScaled(sx, sy, sz);
     
     // Render the textured quad by mapping the texture coordinates to the vertices
+    NSRect       bounds;
+    GLdouble     retio;
     bounds = [context bounds];
     retio = (bounds.size.height / bounds.size.width);
     glBegin(GL_QUADS);
         glTexCoord2d(1.0f, 1.0f);
-        glVertex3d(1.0f, retio, 0.0f);    // upper right
+        glVertex2d(1.0f, retio);            // upper right
         glTexCoord2d(0.0f, 1.0f);
-        glVertex3d(-1.0f, retio, 0.0f);   // upper left
+        glVertex2d(-1.0f, retio);           // upper left
         glTexCoord2d(0.0f, 0.0f);
-        glVertex3d(-1.0f, retio * (-1.0f), 0.0f);  // lower left
+        glVertex2d(-1.0f, retio * (-1.0f)); // lower left
         glTexCoord2d(1.0f, 0.0f);
-        glVertex3d(1.0f, retio * (-1.0f), 0.0f);   // lower right
+        glVertex2d(1.0f, retio * (-1.0f));  // lower right
     glEnd();
     
-    glFlush();
-    
+    // Set Color
+    const CGFloat * colorComponents = CGColorGetComponents(self.inputColor);
+    glColor4d(colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]);
+
+    // Restore original viewport
+    glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
+
     if (textureName)
     {
         // Unbind the texture from the texture unit.
         [image unbindTextureRepresentationFromCGLContext:cgl_ctx textureUnit: GL_TEXTURE0];
     }
-
-    glDisable(GL_BLEND);  //ブレンド無効化
+    
+    glDisable(GL_ALPHA_TEST);
+    if (self.inputCulling != NoFace)
+    {
+        glDisable(GL_CULL_FACE);
+    }
+    if (self.inputDepthTest != None)
+    {
+        glDisable(GL_DEPTH_TEST);
+    }
+    glDisable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
 
     // Restore
     glMatrixMode(GL_MODELVIEW);
@@ -295,6 +377,7 @@
     glMatrixMode(saveMode);
     
     // Check for OpenGL errors and log them if there are errors.
+    GLenum       error;
     error = glGetError();
     if(error) {
         [context logMessage:@"OpenGL error %04X", error];
