@@ -10,6 +10,9 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 --------------------|----------
 Blaze.qtz| ~/Library/Compositions/
 Bump.qtz| ~/Library/Compositions/
+Draw String With FontLister.qtz| ~/Library/Compositions/
+Draw String WithOut FontLister.qtz| ~/Library/Compositions/
+Gleam.qtz| ~/Library/Compositions/
 Move Image.qtz| ~/Library/Compositions/
 Move.qtz| ~/Library/Compositions/
 Page Curl.qtz| ~/Library/Compositions/
@@ -179,6 +182,59 @@ Z 軸を中心に回転する角度、または回転数を指定します。
 　
 ## Draw String WithOut FontLister.qtz
 Font Lister を使用しない以外は、Draw String With FontLister と同じ動作をします。フォント名の指定以外はパラメータも同じです。
+
+　
+## Gleam.qtz
+目がきらーんと光る時のあの光のエフェクトです。
+### 指定可能なパラメータ
+#### Color
+光の色を指定します。
+#### X Position (X 位置)
+光を表示する左右方向の座標をピクセル単位で指定します。画面左下隅が原点です。
+#### Y Position (Y 位置)
+光を表示する上下方向の座標をピクセル単位で指定します。画面左下隅が原点です。
+#### Z Position (Z 位置)
+光を表示する前後の座標をピクセル単位で指定します。デフォルトは 0 で、負の値を指定すると画面に表示されません。
+#### Start Time
+光を表示する開始時間をミリ秒単位で指定します。
+#### End Time
+光の表示を終わらせる時間をミリ秒単位で指定します。
+#### Duration
+下記の値に従って、光は大きさを変えますが、その周期をミリ秒単位で指定します。
+#### Min Radius
+光源の強さ＝大きさの初期値を 0 〜 300 までの値で指定します。
+#### Max Radius
+光源の強さ＝大きさの最大値を 0 〜 300 までの値で指定します。最大値と言ってますが、Min Radius より小さな値を指定することもできます。その場合、最初大きく表示されて徐々に小さくなり、また大きくなるという動きをします。
+#### Min Scale
+十字の光の長さの初期値を 0 〜 100 までの値で指定します。
+#### Max Scale
+十字の光の長さの最大値を 0 〜 100 までの値で指定します。もちろん、Min Scale より小さい値を指定することもできます。
+#### Min Angle
+十字の光の傾きの初期値を角度で指定します。範囲は、0°〜180°です。
+#### Max Angle
+十字の光の傾きの最大値を角度で指定します。範囲は、0°〜180°です。
+#### Min Opacity
+十字の光の透明度の初期値を -8 〜 0 までの値で指定します。
+#### Max Opacity
+十字の光の透明度の最大値を -8 〜 0 までの値で指定します。Min Opacity より小さい値を指定することもできます。
+#### Min Width
+十字の光の幅の初期値を 0.5 〜 10 までの値で指定します。
+#### Max Width
+十字の光の幅の最大値を 0.5 〜 10 までの値で指定します。Min Width より小さい値を指定することもできます。
+#### Min Epsilon
+十字の光の減衰幅の初期値を -8 〜 0 までの値で指定します。
+#### Max Epsilon
+十字の光の減衰幅の最大値を -8 〜 0 までの値で指定します。
+#### X Distance
+光を移動させる場合の横方向への移動量をピクセル単位で指定します。正の値で右に、負の値で左に移動します。
+#### Y Distance
+光を移動させる場合の縦方向への移動量をピクセル単位で指定します。正の値で上に、負の値で下に移動します。
+#### Z Distance
+光を移動させる場合の前後方向への移動量をピクセル単位で指定します。正の値で手前に、負の値で奥に移動します。
+#### Move Start
+移動を開始する時間をミリ秒単位で指定します。
+#### Move End
+移動を完了する時間をミリ秒単位で指定します。
 
 　
 ## Explosion.qtz
