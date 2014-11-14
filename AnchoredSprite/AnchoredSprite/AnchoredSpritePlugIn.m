@@ -16,8 +16,6 @@
 #define	kQCPlugIn_Description		@"This patch allow to translate, scale and rotate the input image at the specified point."
 
 static NSArray * blendOptions;
-static NSArray * depthTestOptions;
-static NSArray * CullingOptions;
 
 @implementation AnchoredSpritePlugIn
 
@@ -37,8 +35,6 @@ static NSArray * CullingOptions;
 @dynamic inputZScale;
 @dynamic inputColor;
 @dynamic inputBlendMode;
-@dynamic inputDepthTest;
-@dynamic inputCulling;
 
 // Here you need to declare the input / output properties as dynamic as Quartz Composer will handle their implementation
 //@dynamic inputFoo, outputBar;
@@ -123,32 +119,12 @@ static NSArray * CullingOptions;
                 nil];
     if ([key isEqualToString:PKEY_INPUTBLENDMOD])
     {
-        blendOptions = [NSArray arrayWithObjects:BLEND_NAME_DEFAULT, @"-", BLEND_NAME_ALPHA, BLEND_NAME_ADD, BLEND_NAME_MULTI,BLEND_NAME_INVERT, BLEND_NAME_SCREEN, BLEND_NAME_XOR, nil];
+        blendOptions = [NSArray arrayWithObjects:BLEND_NAME_REPLACE, BLEND_NAME_OVER, BLEND_NAME_ADD, BLEND_NAME_ADDALPHA, BLEND_NAME_ALPHA, BLEND_NAME_MULTI,BLEND_NAME_INVERT, BLEND_NAME_SCREEN, BLEND_NAME_XOR, nil];
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTBLENDMOD, QCPortAttributeNameKey,
                 blendOptions, QCPortAttributeMenuItemsKey,
                 [NSNumber numberWithUnsignedInteger:PDEF_INPUTBLENDMOD], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithUnsignedInteger:PMAX_INPUTBLENDMOD], QCPortAttributeMaximumValueKey,
-                nil];
-    }
-    if ([key isEqualToString:PKEY_INPUTDEPTHTEST])
-    {
-        depthTestOptions = [NSArray arrayWithObjects:DEPTHTEST_NONE, DEPTHTEST_RW, DEPTHTEST_RO, nil];
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTDEPTHTEST, QCPortAttributeNameKey,
-                depthTestOptions, QCPortAttributeMenuItemsKey,
-                [NSNumber numberWithUnsignedInteger:PDEF_DEPTHTEST], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithUnsignedInteger:PMAX_DEPTHTEST], QCPortAttributeMaximumValueKey,
-                nil];
-    }
-    if ([key isEqualToString:PKEY_INPUTCULLING])
-    {
-        CullingOptions = [NSArray arrayWithObjects:CULLING_NONE, CULLING_FRONT, CULLING_BACK, nil];
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTCULLING, QCPortAttributeNameKey,
-                CullingOptions, QCPortAttributeMenuItemsKey,
-                [NSNumber numberWithUnsignedInteger:PDEF_FACECULLING], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithUnsignedInteger:PMAX_FACECULLING], QCPortAttributeMaximumValueKey,
                 nil];
     }
 
@@ -195,6 +171,61 @@ static NSArray * CullingOptions;
 	// Called by Quartz Composer when the plug-in instance starts being used by Quartz Composer.
 }
 
+- (void)setBlendFunc:(CGLContextObj) cgl_ctx
+{
+    switch (self.inputBlendMode)
+    {
+        case ClrBlendMode_Replace:      // 置換
+            BLEND_Func_Replace();
+            break;
+        case ClrBlendMode_Add:          // 加算合成 (アルファなし)
+            BLEND_Func_Add();
+            break;
+        case ClrBlendMode_AddAlpha:     // 加算合成 (アルファあり)
+            BLEND_Func_AddAlpha();
+            break;
+        case ClrBlendMode_Alpha:        // アルファブレンド
+            BLEND_Func_Alpha();
+            break;
+        case ClrBlendMode_Multi:        // 乗算合成
+            BLEND_Func_Multi();
+            break;
+        case ClrBlendMode_Invert:       // 反転合成
+            BLEND_Func_Invert();
+            break;
+        case ClrBlendMode_Screen:       // スクリーン合成
+            BLEND_Func_Screen();
+            break;
+        case ClrBlendMode_Xor:          // 排他的論理和合成
+            BLEND_Func_XOR();
+            break;
+        default:                        // 上書き
+            BLEND_Func_Over();
+            break;
+            glEnable(GL_BLEND);
+    }
+}
+
+- (void)setDepthTest:(CGLContextObj) cgl_ctx
+{
+    GLboolean IsOriginDepthTest;
+    glGetBooleanv(GL_DEPTH_TEST, &IsOriginDepthTest);
+
+    if (self.inputDepthTest != None)
+    {
+        if (self.inputDepthTest == ReadWrite)
+            glDepthMask(GL_TRUE);
+        else
+            glDepthMask(GL_FALSE);
+        
+        glEnable(GL_DEPTH_TEST);
+    }
+    else
+    {
+        glDisable(GL_DEPTH_TEST);
+    }
+}
+
 - (BOOL)execute:(id <QCPlugInContext>)context atTime:(NSTimeInterval)time withArguments:(NSDictionary *)arguments
 {
 	/*
@@ -211,7 +242,7 @@ static NSArray * CullingOptions;
     if(cgl_ctx == NULL)
         return NO;
 
-    //
+    // Initialize
     if(image) {
          if ([image lockTextureRepresentationWithColorSpace:([image shouldColorMatch] ? [context colorSpace] :
                                                                                         [image imageColorSpace])
@@ -222,70 +253,18 @@ static NSArray * CullingOptions;
     }
     
     CGLSetCurrentContext(cgl_ctx);
-    GLint order = 1;
-    CGLSetParameter(cgl_ctx, kCGLCPSurfaceOrder, &order);
     
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    // Save and set the modelview matrix.
-    GLint         saveMode;
+    // 現在の状態を保存
+    GLint saveMode;
     glGetIntegerv(GL_MATRIX_MODE, &saveMode);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
 
-    glEnable(GL_TEXTURE_2D);
-
     // ブレンド処理
-    switch (self.inputBlendMode)
-    {
-        case ClrBlendMode_Alpha:          // ― アルファブレンド
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            break;
-        case ClrBlendMode_Add:            // ― 加算合成
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-            break;
-        case ClrBlendMode_Multi:          // ― 乗算合成
-            glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-            break;
-        case ClrBlendMode_Invert:         // ― 反転合成
-            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-            break;
-        case ClrBlendMode_Screen:         // ― スクリーン合成
-            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
-            break;
-        case ClrBlendMode_Xor:            // ― 排他的論理和合成
-            glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
-            break;
-        default:
-            glBlendFunc(GL_ONE, GL_ZERO);
-            break;
-        glEnable(GL_BLEND);
-    }
-    // Depth テスト
-    if (self.inputDepthTest != None)
-    {
-        if (self.inputDepthTest == ReadWrite)
-            glDepthMask(GL_TRUE);
-        else
-            glDepthMask(GL_FALSE);
-        
-        glEnable(GL_DEPTH_TEST);
-    }
-    // Fae CUlling
-    if (self.inputCulling != NoFace)
-    {
-        if (self.inputCulling == BackFace)
-            glCullFace(GL_BACK);
-        else
-            glCullFace(GL_FRONT);
-        
-        glEnable(GL_CULL_FACE);
-    }
-    // アルファテスト
-    glEnable(GL_ALPHA_TEST);
+    [self setBlendFunc:cgl_ctx];
 
+    // テクスチャをバインド
     if (textureName)
     {
         [image bindTextureRepresentationToCGLContext:cgl_ctx
@@ -358,25 +337,12 @@ static NSArray * CullingOptions;
         // Unbind the texture from the texture unit.
         [image unbindTextureRepresentationFromCGLContext:cgl_ctx textureUnit: GL_TEXTURE0];
     }
-    
-    glDisable(GL_ALPHA_TEST);
-    if (self.inputCulling != NoFace)
-    {
-        glDisable(GL_CULL_FACE);
-    }
-    if (self.inputDepthTest != None)
-    {
-        glDisable(GL_DEPTH_TEST);
-    }
-    glDisable(GL_BLEND);
-    glDisable(GL_TEXTURE_2D);
 
     // Restore
-    glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
     glMatrixMode(saveMode);
     
-    // Check for OpenGL errors and log them if there are errors.
+    // エラーチェック
     GLenum       error;
     error = glGetError();
     if(error) {
@@ -384,7 +350,7 @@ static NSArray * CullingOptions;
         return NO;
     }
     
-    // Release the texture.
+    // テクスチャを破棄
     if(textureName)
         [image unlockTextureRepresentation];
 

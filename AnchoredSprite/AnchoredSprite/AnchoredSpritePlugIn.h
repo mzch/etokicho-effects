@@ -2,8 +2,8 @@
 //  AnchoredSpritePlugIn.h
 //  AnchoredSprite
 //
-//  Created by 松本 光一 on 2014/11/09.
-//  Copyright (c) 2014年 Koichi MATSUMOTO. All rights reserved.
+//  Created by Koichi MATSUMOTO on 2014/11/09.
+//  Copyright (c) 2014 Koichi MATSUMOTO. All rights reserved.
 //
 
 #import <Quartz/Quartz.h>
@@ -11,63 +11,38 @@
 // Constant definitions
 
 // ブレンドモード
-#define BLEND_NAME_DEFAULT  @"デフォルト"
+#define BLEND_Func_Replace()    glBlendFunc(GL_ONE, GL_ZERO)
+#define BLEND_Func_Over()       glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+#define BLEND_Func_Add()        glBlendFunc(GL_ONE, GL_ONE)
+#define BLEND_Func_AddAlpha()   glBlendFunc(GL_SRC_ALPHA, GL_ONE)
+#define BLEND_Func_Alpha()      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+#define BLEND_Func_Multi()      glBlendFunc(GL_ZERO, GL_SRC_COLOR)
+#define BLEND_Func_Invert()     glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO)
+#define BLEND_Func_Screen()     glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE)
+#define BLEND_Func_XOR()        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR)
+
+#define BLEND_NAME_REPLACE  @"置換"
+#define BLEND_NAME_OVER     @"上書き"
+#define BLEND_NAME_ADD      @"加算合成 (αなし)"
+#define BLEND_NAME_ADDALPHA @"加算合成 (αあり)"
 #define BLEND_NAME_ALPHA    @"アルファブレンド"
-#define BLEND_NAME_ADD      @"加算合成"
 #define BLEND_NAME_MULTI    @"乗算合成"
 #define BLEND_NAME_INVERT   @"反転合成"
 #define BLEND_NAME_SCREEN   @"スクリーン合成"
 #define BLEND_NAME_XOR      @"排他的論理和合成"
 
 enum BlendMode {
-    ClrBlendMode_Default = 0,
-    ClrBlendMode_Alpha,
+    ClrBlendMode_Replace = 0,
+    ClrBlendMode_Over,
     ClrBlendMode_Add,
+    ClrBlendMode_AddAlpha,
+    ClrBlendMode_Alpha,
     ClrBlendMode_Multi,
     ClrBlendMode_Invert,
     ClrBlendMode_Screen,
     ClrBlendMode_Xor,
     NumOfBlendMode
 };
-
-// ブレンディング
-#define BLENDING_REPLACE    @"Replace"
-#define BLENDING_OVER       @"Over"
-#define BLENDING_ADD        @"Add"
-
-enum Blending {
-    Blending_Replace = 0,
-    Blending_Øver,
-    Blending_Add,
-    NumOfBlending
-};
-#define PDEF_BLENDING      Blending_Øver
-#define PMAX_BLENDING      (NumOfBlending - 1)
-// Depth Test
-#define DEPTHTEST_NONE      @"None"
-#define DEPTHTEST_RW        @"Read/Write"
-#define DEPTHTEST_RO        @"Read Only"
-enum DepthTest {
-    None = 0,
-    ReadWrite,
-    ReadØnly,
-    NumOfDepthTest
-};
-#define PDEF_DEPTHTEST      ReadWrite
-#define PMAX_DEPTHTEST      (NumOfDepthTest - 1)
-
-// Face Culling
-#define CULLING_NONE        @"None"
-#define CULLING_FRONT       @"Front Face"
-#define CULLING_BACK        @"Back Face"
-enum FaceCUlling {
-    NoFace = 0,
-    BackFace,
-    FrontFåce,
-    NumOfFaceCulling
-};
-#define PDEF_FACECULLING    NoFace
-#define PMAX_FACECULLING    (NumOfFaceCulling - 1)
 
 // キー値、名称、デフォルト値
 #define PKEY_INPUTIMAGE     @"inputImage"
@@ -85,8 +60,6 @@ enum FaceCUlling {
 #define PKEY_INPUTZSCALE    @"inputZScale"
 #define PKEY_INPUTCOLOR     @"inputColor"
 #define PKEY_INPUTBLENDMOD  @"inputBlendMode"
-#define PKEY_INPUTDEPTHTEST @"inputDepthTest"
-#define PKEY_INPUTCULLING   @"inputCulling"
 
 #define PNAME_INPUTIMAGE    @"Image"
 #define PNAME_INPUTANCHORX  @"Anchor X"
@@ -103,8 +76,6 @@ enum FaceCUlling {
 #define PNAME_INPUTZSCALE   @"Z Scale"
 #define PNAME_INPUTCOLOR    @"Color"
 #define PNAME_INPUTBLENDMOD @"Blend Mode"
-#define PNAME_INPUTDEPTHTEST @"Depth Testing"
-#define PNAME_INPUTCULLING   @"Face Culling"
 
 #define PDEF_INPUTANCHORX   0.0f
 #define PDEF_INPUTANCHORY   0.0f
@@ -119,7 +90,7 @@ enum FaceCUlling {
 #define PDEF_INPUTYSCALE    1.0f
 #define PDEF_INPUTZSCALE    1.0f
 #define PDEF_INPUTCOLOR     CGColorCreateGenericRGB(1.0f, 1.0f, 1.0f, 1.0f)
-#define PDEF_INPUTBLENDMOD  ClrBlendMode_Default
+#define PDEF_INPUTBLENDMOD  ClrBlendMode_Over
 #define PMAX_INPUTBLENDMOD  (NumOfBlendMode - 1)
 
 @interface AnchoredSpritePlugIn : QCPlugIn
@@ -142,8 +113,5 @@ enum FaceCUlling {
 @property (assign) double inputZScale;
 @property (assign) CGColorRef inputColor;
 @property (assign) NSUInteger inputBlendMode;
-/* special control ports. */
-@property (assign) NSUInteger inputDepthTest;
-@property (assign) NSUInteger inputCulling;
 
 @end
