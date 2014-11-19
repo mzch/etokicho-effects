@@ -13,6 +13,7 @@ Blink.qtz| ~/Library/Compositions/
 Bump.qtz| ~/Library/Compositions/
 Draw String With FontLister.qtz| ~/Library/Compositions/
 Draw String WithOut FontLister.qtz| ~/Library/Compositions/
+Fade.qtz| ~/Library/Compositions/
 Gleam.qtz| ~/Library/Compositions/
 Move Image.qtz| ~/Library/Compositions/
 Move.qtz| ~/Library/Compositions/
