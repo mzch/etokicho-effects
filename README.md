@@ -19,6 +19,7 @@ Move Image.qtz| ~/Library/Compositions/
 Move.qtz| ~/Library/Compositions/
 Page Curl.qtz| ~/Library/Compositions/
 Shake.qtz| ~/Library/Compositions/
+Spot Light.qtz| ~/Library/Compositions/
 Pixels To Units Coordinate.qtz| ~/Library/Graphics/Quartz Composer Patches
 AnchoredSprite.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
 TimerSwitch.plugin|~/Library/Graphics/Quartz Composer Plug-ins
@@ -43,3 +44,4 @@ TimerSwitch.plugin|~/Library/Graphics/Quartz Composer Plug-ins
 2014/11/13 初版    
 2014/11/13 Blaze.qtz 追加    
 2014/11/20 Blink.qtz 追加    
+2014/11/21 Spot Light.qtz 追加    
