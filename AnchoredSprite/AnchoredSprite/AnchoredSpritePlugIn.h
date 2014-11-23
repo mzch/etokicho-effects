@@ -52,6 +52,9 @@ enum BlendMode {
 #define PKEY_INPUTDISTX     @"inputDistX"
 #define PKEY_INPUTDISTY     @"inputDistY"
 #define PKEY_INPUTDISTZ     @"inputDistZ"
+#define PKEY_INPUTXAXIS     @"inputXAxis"
+#define PKEY_INPUTYAXIS     @"inputYAxis"
+#define PKEY_INPUTZAXIS     @"inputZAxis"
 #define PKEY_INPUTXANGLE    @"inputXAngle"
 #define PKEY_INPUTYANGLE    @"inputYAngle"
 #define PKEY_INPUTZANGLE    @"inputZAngle"
@@ -68,6 +71,9 @@ enum BlendMode {
 #define PNAME_INPUTDISTX    @"X Distance"
 #define PNAME_INPUTDISTY    @"Y Distance"
 #define PNAME_INPUTDISTZ    @"Z Distance"
+#define PNAME_INPUTXAXIS    @"X Axis"
+#define PNAME_INPUTYAXIS    @"Y Axis"
+#define PNAME_INPUTZAXIS    @"Z Axis"
 #define PNAME_INPUTXANGLE   @"X Rotation"
 #define PNAME_INPUTYANGLE   @"Y Rotation"
 #define PNAME_INPUTZANGLE   @"Z Rotation"
@@ -83,6 +89,9 @@ enum BlendMode {
 #define PDEF_INPUTDISTX     0.0f
 #define PDEF_INPUTDISTY     0.0f
 #define PDEF_INPUTDISTZ     0.0f
+#define PDEF_INPUTXAXIS     0.0f
+#define PDEF_INPUTYAXIS     0.0f
+#define PDEF_INPUTZAXIS     0.0f
 #define PDEF_INPUTXANGLE    0.0f
 #define PDEF_INPUTYANGLE    0.0f
 #define PDEF_INPUTZANGLE    0.0f
@@ -92,6 +101,12 @@ enum BlendMode {
 #define PDEF_INPUTCOLOR     CGColorCreateGenericRGB(1.0f, 1.0f, 1.0f, 1.0f)
 #define PDEF_INPUTBLENDMOD  ClrBlendMode_Over
 #define PMAX_INPUTBLENDMOD  (NumOfBlendMode - 1)
+#define PMIN_INPUTXAXIS     -180.0f
+#define PMIN_INPUTYAXIS     -180.0f
+#define PMIN_INPUTZAXIS     -180.0f
+#define PMAX_INPUTXAXIS     180.0f
+#define PMAX_INPUTYAXIS     180.0f
+#define PMAX_INPUTZAXIS     180.0f
 
 @interface AnchoredSpritePlugIn : QCPlugIn
 
@@ -105,6 +120,9 @@ enum BlendMode {
 @property (assign) double inputDistX;
 @property (assign) double inputDistY;
 @property (assign) double inputDistZ;
+@property (assign) double inputXAxis;
+@property (assign) double inputYAxis;
+@property (assign) double inputZAxis;
 @property (assign) double inputXAngle;
 @property (assign) double inputYAngle;
 @property (assign) double inputZAngle;

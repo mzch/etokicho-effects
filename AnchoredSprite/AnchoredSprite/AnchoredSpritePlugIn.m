@@ -9,6 +9,7 @@
 // It's highly recommended to use CGL macros instead of changing the current context for plug-ins that perform OpenGL rendering
 #import <OpenGL/CGLMacro.h>
 #import <OpenGL/glu.h>
+#import <GLKit/GLKit.h>
 
 #import "AnchoredSpritePlugIn.h"
 
@@ -30,6 +31,9 @@ static NSArray * blendOptions;
 @dynamic inputXAngle;
 @dynamic inputYAngle;
 @dynamic inputZAngle;
+@dynamic inputXAxis;
+@dynamic inputYAxis;
+@dynamic inputZAxis;
 @dynamic inputXScale;
 @dynamic inputYScale;
 @dynamic inputZScale;
@@ -81,6 +85,27 @@ static NSArray * blendOptions;
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTDISTZ, QCPortAttributeNameKey,
                 [NSNumber numberWithFloat:PDEF_INPUTDISTZ], QCPortAttributeDefaultValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTXAXIS])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTXAXIS, QCPortAttributeNameKey,
+                [NSNumber numberWithFloat:PDEF_INPUTXAXIS], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithFloat:PMIN_INPUTXAXIS], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithFloat:PMAX_INPUTXAXIS], QCPortAttributeMaximumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTYAXIS])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTYAXIS, QCPortAttributeNameKey,
+                [NSNumber numberWithFloat:PDEF_INPUTYAXIS], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithFloat:PMIN_INPUTYAXIS], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithFloat:PMAX_INPUTYAXIS], QCPortAttributeMaximumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTZAXIS])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTZAXIS, QCPortAttributeNameKey,
+                [NSNumber numberWithFloat:PDEF_INPUTZAXIS], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithFloat:PMIN_INPUTZAXIS], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithFloat:PMAX_INPUTZAXIS], QCPortAttributeMaximumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTXANGLE])
         return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -206,6 +231,7 @@ static NSArray * blendOptions;
     }
 }
 
+#if 0
 - (void)setDepthTest:(CGLContextObj) cgl_ctx
 {
     GLboolean IsOriginDepthTest;
@@ -225,6 +251,7 @@ static NSArray * blendOptions;
         glDisable(GL_DEPTH_TEST);
     }
 }
+#endif
 
 - (BOOL)execute:(id <QCPlugInContext>)context atTime:(NSTimeInterval)time withArguments:(NSDictionary *)arguments
 {
@@ -257,8 +284,8 @@ static NSArray * blendOptions;
     // 現在の状態を保存
     GLint saveMode;
     glGetIntegerv(GL_MATRIX_MODE, &saveMode);
-    glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     // ブレンド処理
@@ -283,6 +310,9 @@ static NSArray * blendOptions;
     iy -= ibounds.size.height / 2;
     glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
 
+    // 法線の正規化を開始
+    glEnable(GL_NORMALIZE);
+
     // Translate the matrix
     GLdouble      x = self.inputAnchorX;
     GLdouble      y = self.inputAnchorY;
@@ -292,9 +322,26 @@ static NSArray * blendOptions;
     GLdouble     ax = self.inputXAngle;
     GLdouble     ay = self.inputYAngle;
     GLdouble     az = self.inputZAngle;
-    glRotated(ax, 1.0f, 0.0f, 0.0f);
-    glRotated(ay, 0.0f, 1.0f, 0.0f);
-    glRotated(az, 0.0f, 0.0f, 1.0f);
+    GLfloat   rad_x = GLKMathDegreesToRadians((float) self.inputXAxis);
+    GLfloat   rad_y = GLKMathDegreesToRadians((float) self.inputYAxis);
+    GLfloat   rad_z = GLKMathDegreesToRadians((float) self.inputZAxis);
+    GLfloat   vec_x = cos(rad_y) * cos(rad_z);
+    GLfloat   vec_y = (sin(rad_x) * sin(rad_y) * cos(rad_z)) - (cos(rad_x) * sin(rad_z));
+    GLfloat   vec_z = (cos(rad_x) * sin(rad_y) * cos(rad_z)) + (sin(rad_y) * sin(rad_z));
+    glRotated(ax, vec_x, vec_y, vec_z);
+    vec_x = cos(rad_y) * sin(rad_z);
+    vec_y = (sin(rad_x) * sin(rad_y) * sin(rad_z)) + (cos(rad_x) * cos(rad_z));
+    vec_z = (cos(rad_x) * sin(rad_y) * sin(rad_z)) - (sin(rad_x) * cos(rad_z));
+    glRotated(ay, vec_x, vec_y, vec_z);
+    vec_x = (-1.0f) * sin(rad_y);
+    vec_y = sin(rad_x) * cos(rad_y);
+    vec_z = cos(rad_x) * cos(rad_y);
+    glRotated(az, vec_x, vec_y, vec_z);
+    // Scale the matrix
+    GLdouble     sx = self.inputXScale;
+    GLdouble     sy = self.inputYScale;
+    GLdouble     sz = self.inputZScale;
+    glScaled(sx, sy, sz);
     // Set New Position
     GLdouble     ox = self.inputAnchorX * (-1.0f);
     GLdouble     oy = self.inputAnchorY * (-1.0f);
@@ -302,12 +349,11 @@ static NSArray * blendOptions;
     GLdouble     nx = self.inputDistX;
     GLdouble     ny = self.inputDistY;
     GLdouble     nz = self.inputDistZ;
-    GLdouble     sx = self.inputXScale;
-    GLdouble     sy = self.inputYScale;
-    GLdouble     sz = self.inputZScale;
     glTranslated((ox * sx) + nx, (oy * sy) + ny, (oz * sz) + nz);
-    // Scale the matrix
-    glScaled(sx, sy, sz);
+    
+    // Set Color
+    const CGFloat * colorComponents = CGColorGetComponents(self.inputColor);
+    glColor4f(colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]);
     
     // Render the textured quad by mapping the texture coordinates to the vertices
     NSRect       bounds;
@@ -325,10 +371,9 @@ static NSArray * blendOptions;
         glVertex2d(1.0f, retio * (-1.0f));  // lower right
     glEnd();
     
-    // Set Color
-    const CGFloat * colorComponents = CGColorGetComponents(self.inputColor);
-    glColor4d(colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]);
-
+    // 法線の正規化を終了
+    glDisable(GL_NORMALIZE);
+    
     // Restore original viewport
     glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
 
