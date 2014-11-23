@@ -227,8 +227,8 @@ static NSArray * blendOptions;
         default:                        // 上書き
             BLEND_Func_Over();
             break;
-            glEnable(GL_BLEND);
     }
+    glEnable(GL_BLEND);
 }
 
 #if 0
@@ -284,6 +284,8 @@ static NSArray * blendOptions;
     // 現在の状態を保存
     GLint saveMode;
     glGetIntegerv(GL_MATRIX_MODE, &saveMode);
+    GLboolean saveBlend;
+    glGetBooleanv(GL_BLEND, &saveBlend);
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -291,6 +293,9 @@ static NSArray * blendOptions;
     // ブレンド処理
     [self setBlendFunc:cgl_ctx];
 
+    // 法線の正規化を開始
+    glEnable(GL_NORMALIZE);
+    
     // テクスチャをバインド
     if (textureName)
     {
@@ -309,9 +314,6 @@ static NSArray * blendOptions;
     ix -= ibounds.size.width  / 2;
     iy -= ibounds.size.height / 2;
     glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
-
-    // 法線の正規化を開始
-    glEnable(GL_NORMALIZE);
 
     // Translate the matrix
     GLdouble      x = self.inputAnchorX;
@@ -385,6 +387,10 @@ static NSArray * blendOptions;
 
     // Restore
     glPopMatrix();
+    if (! saveBlend)
+    {
+        glDisable(GL_BLEND);
+    }
     glMatrixMode(saveMode);
     
     // エラーチェック
