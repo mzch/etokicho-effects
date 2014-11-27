@@ -345,13 +345,10 @@ static NSArray * blendOptions;
     GLdouble     sz = self.inputZScale;
     glScaled(sx, sy, sz);
     // Set New Position
-    GLdouble     ox = self.inputAnchorX * (-1.0f);
-    GLdouble     oy = self.inputAnchorY * (-1.0f);
-    GLdouble     oz = self.inputAnchorZ * (-1.0f);
     GLdouble     nx = self.inputDistX;
     GLdouble     ny = self.inputDistY;
     GLdouble     nz = self.inputDistZ;
-    glTranslated((ox * sx) + nx, (oy * sy) + ny, (oz * sz) + nz);
+    glTranslated((nx - x) * sx, (ny - y) * sy, (nz - z) * sz);
     
     // Set Color
     const CGFloat * colorComponents = CGColorGetComponents(self.inputColor);
