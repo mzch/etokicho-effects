@@ -20,9 +20,11 @@ Move Image.qtz| ~/Library/Compositions/
 Move.qtz| ~/Library/Compositions/
 Page Curl.qtz| ~/Library/Compositions/
 Shake.qtz| ~/Library/Compositions/
+Slide.qtz| ~/Library/Compositions/
 Spot Light.qtz| ~/Library/Compositions/
 Pixels To Units Coordinate.qtz| ~/Library/Graphics/Quartz Composer Patches
 AnchoredSprite.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
+SlidingSprite.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
 TimerSwitch.plugin|~/Library/Graphics/Quartz Composer Plug-ins
 
 * AnchoredSprite.plugin および、TimerSwitch.plugin は、エフェクト中で使用している Quick Composer プラグインです。必ず指定位置にコピーして下さい。
@@ -44,3 +46,4 @@ TimerSwitch.plugin|~/Library/Graphics/Quartz Composer Plug-ins
 2014/11/20 Blink.qtz 追加    
 2014/11/21 Spot Light.qtz 追加    
 2014/11/23 Bounce.qtz 追加    
+2014/12/18 Slide.qtz および SlidingSprite.qtz 追加    
