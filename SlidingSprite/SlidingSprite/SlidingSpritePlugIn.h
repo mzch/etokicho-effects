@@ -8,6 +8,15 @@
 
 #import <Quartz/Quartz.h>
 
+// Type definitions
+typedef struct
+{
+    GLdouble x;
+    GLdouble y;
+    GLdouble z;
+}
+SSDistance;
+
 // Constant definitions
 
 // ブレンドモード
@@ -44,6 +53,18 @@ enum BlendMode {
     NumOfBlendMode
 };
 
+// ジャンプの動き
+#define JUMP_ARC                @"円弧状"
+#define JUMP_WALK               @"歩く動作"
+#define JUMP_QUAD               @"かくんかくん"
+
+enum JumpBehavir {
+    ClrJumpBehavior_Arc = 0,
+    ClrJumpBehavior_Walk,
+    ClrJumpBehavior_Quad,
+    NumOfJumpBehavor
+    };
+
 // キー値、名称、デフォルト値
 #define PKEY_INPUTIMAGE         @"inputImage"
 #define PKEY_INPUTANCHORX       @"inputAnchorX"
@@ -68,6 +89,13 @@ enum BlendMode {
 #define PKEY_INPUTZSCALEEND     @"inputZScaleEnd"
 #define PKEY_INPUTSCALESTARTTIME @"inputScaleStartTime"
 #define PKEY_INPUTSCALEENDTIME  @"inputScaleEndTime"
+#define PKEY_INPUTBOUNCE        @"inputBounce"
+#define PKEY_INPUTXLEAD         @"inputXLead"
+#define PKEY_INPUTYLEAD         @"inputYLead"
+#define PKEY_INPUTZLEAD         @"inputZLead"
+#define PKEY_INPUTJUMPSTARTTIME @"inputJumpStartTime"
+#define PKEY_INPUTJUMPENDTIME   @"inputJumpEndTime"
+#define PKEY_INPUTBEHAVIOR      @"inputBehavior"
 #define PKEY_INPUTXAXIS         @"inputXAxis"
 #define PKEY_INPUTYAXIS         @"inputYAxis"
 #define PKEY_INPUTZAXIS         @"inputZAxis"
@@ -108,6 +136,13 @@ enum BlendMode {
 #define PNAME_INPUTZSCALEEND    @"Z Scale End"
 #define PNAME_INPUTSCALESTARTTIME @"Scale Start Time"
 #define PNAME_INPUTSCALEENDTIME  @"Scale End Time"
+#define PNAME_INPUTBOUNCE       @"Bounce"
+#define PNAME_INPUTXLEAD        @"X Lead"
+#define PNAME_INPUTYLEAD        @"Y Lead"
+#define PNAME_INPUTZLEAD        @"Z Lead"
+#define PNAME_INPUTJUMPSTARTTIME @"Jump Start Time"
+#define PNAME_INPUTJUMPENDTIME   @"Jump End Time"
+#define PNAME_INPUTBEHAVIOR      @"Jump Behavior"
 #define PNAME_INPUTXAXIS        @"X Axis"
 #define PNAME_INPUTYAXIS        @"Y Axis"
 #define PNAME_INPUTZAXIS        @"Z Axis"
@@ -152,8 +187,12 @@ enum BlendMode {
 #define PDEF_INPUTISXSPIN     NO
 #define PDEF_INPUTISYSPIN     NO
 #define PDEF_INPUTISZSPIN     NO
+#define PDEF_INPUTBOUNCE      0
+#define PDEF_INPUTLEAD        0.0f
 #define PDEF_INPUTTIME        0.0f
 #define PDEF_INPUTSETIME      0
+#define PDEF_INPUTBEHAVIOR    0
+#define PMAX_INPUTBEHAVIOR    (NumOfJumpBehavor - 1)
 
 @interface SlidingSpritePlugIn : QCPlugIn
 
@@ -181,6 +220,13 @@ enum BlendMode {
 @property (assign) double     inputZScaleEnd;
 @property (assign) NSUInteger inputScaleStartTime;
 @property (assign) NSUInteger inputScaleEndTime;
+@property (assign) NSUInteger inputBounce;
+@property (assign) double     inputXLead;
+@property (assign) double     inputYLead;
+@property (assign) double     inputZLead;
+@property (assign) NSUInteger inputJumpStartTime;
+@property (assign) NSUInteger inputJumpEndTime;
+@property (assign) NSUInteger inputBehavior;
 @property (assign) double     inputXAxis;
 @property (assign) double     inputYAxis;
 @property (assign) double     inputZAxis;
@@ -211,5 +257,6 @@ enum BlendMode {
 @property (assign) CGFloat    Green;
 @property (assign) CGFloat    Blue;
 @property (assign) CGFloat    Alpha;
+@property (assign) NSUInteger JumpDuration;
 
 @end

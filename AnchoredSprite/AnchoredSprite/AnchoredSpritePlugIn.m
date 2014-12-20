@@ -370,9 +370,6 @@ static NSArray * blendOptions;
         glVertex2d(1.0f, retio * (-1.0f));  // lower right
     glEnd();
     
-    // 法線の正規化を終了
-    glDisable(GL_NORMALIZE);
-    
     // Restore original viewport
     glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
 
@@ -382,6 +379,9 @@ static NSArray * blendOptions;
         [image unbindTextureRepresentationFromCGLContext:cgl_ctx textureUnit: GL_TEXTURE0];
     }
 
+    // 法線の正規化を終了
+    glDisable(GL_NORMALIZE);
+    
     // Restore
     glPopMatrix();
     if (! saveBlend)

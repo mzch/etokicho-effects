@@ -3,7 +3,7 @@
 //  SlidingSprite
 //
 //  Created by Koichi MATSUMOTO on 2014/12/17.
-//  Copyright (c) 2014年 Koichi MATSUMOTO. All rights reserved.
+//  Copyright (c) 2014 Koichi MATSUMOTO. All rights reserved.
 //
 
 // It's highly recommended to use CGL macros instead of changing the current context for plug-ins that perform OpenGL rendering
@@ -14,9 +14,10 @@
 #import "SlidingSpritePlugIn.h"
 
 #define	kQCPlugIn_Name				@"SlidingSprite"
-#define	kQCPlugIn_Description		@"Slide a specified image on the screen."
+#define	kQCPlugIn_Description		@"Slide in/out, scale and spin a specified image on the screen."
 
 static NSArray * blendOptions;
+static NSArray * jumpOptions;
 
 @implementation SlidingSpritePlugIn
 
@@ -43,6 +44,13 @@ static NSArray * blendOptions;
 @dynamic inputZScaleEnd;
 @dynamic inputScaleStartTime;
 @dynamic inputScaleEndTime;
+@dynamic inputBounce;
+@dynamic inputXLead;
+@dynamic inputYLead;
+@dynamic inputZLead;
+@dynamic inputJumpStartTime;
+@dynamic inputJumpEndTime;
+@dynamic inputBehavior;
 @dynamic inputXAxis;
 @dynamic inputYAxis;
 @dynamic inputZAxis;
@@ -198,6 +206,49 @@ static NSArray * blendOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
+    if ([key isEqualToString:PKEY_INPUTBOUNCE])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTBOUNCE, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTBOUNCE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTBOUNCE], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTXLEAD])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTXLEAD, QCPortAttributeNameKey,
+                [NSNumber numberWithFloat:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTYLEAD])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTYLEAD, QCPortAttributeNameKey,
+                [NSNumber numberWithFloat:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTZLEAD])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTZLEAD, QCPortAttributeNameKey,
+                [NSNumber numberWithFloat:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTJUMPSTARTTIME])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTJUMPSTARTTIME, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTJUMPENDTIME])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTJUMPENDTIME, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTBEHAVIOR])
+    {
+        jumpOptions = [NSArray arrayWithObjects:JUMP_ARC, JUMP_WALK, JUMP_QUAD, nil];
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTBEHAVIOR, QCPortAttributeNameKey,
+                jumpOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTBEHAVIOR], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTBEHAVIOR], QCPortAttributeMaximumValueKey,
+                nil];
+    }
     if ([key isEqualToString:PKEY_INPUTXAXIS])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXAXIS, QCPortAttributeNameKey,
@@ -324,6 +375,7 @@ static NSArray * blendOptions;
         _Green      = 1.0f;
         _Blue       = 1.0f;
         _Alpha      = 1.0f;
+        _JumpDuration = 0;
 	}
 	
 	return self;
@@ -372,9 +424,9 @@ static NSArray * blendOptions;
 - (BOOL)setupExecute
 {
     // 変化量を求める
-    _X_distance = self.inputXPosEnd   - self.inputXPosStart;
-    _Y_distance = self.inputYPosEnd   - self.inputYPosStart;
-    _Z_distance = self.inputZPosEnd   - self.inputZPosStart;
+    _X_distance = self.inputXPosEnd - self.inputXPosStart;
+    _Y_distance = self.inputYPosEnd - self.inputYPosStart;
+    _Z_distance = self.inputZPosEnd - self.inputZPosStart;
 
     const CGFloat * colorStart = CGColorGetComponents(self.inputColorStart);
     const CGFloat * colorEnd   = CGColorGetComponents(self.inputColorEnd);
@@ -399,7 +451,12 @@ static NSArray * blendOptions;
         _Z_rotation = self.inputZAngleEnd * 360.0f;
     else
         _Z_rotation = self.inputZAngleEnd - self.inputZAngleStart;
-    
+
+    if (self.inputJumpEndTime > self.inputJumpStartTime && self.inputBounce > 0)
+        _JumpDuration = (self.inputJumpEndTime - self.inputJumpStartTime) / self.inputBounce;
+    else
+        _JumpDuration = 0;
+
     return YES;
 }
 
@@ -516,10 +573,53 @@ static NSArray * blendOptions;
     return progress;
 }
 
+- (SSDistance) getJumpLead
+{
+    NSTimeInterval StartTime   = (NSTimeInterval) self.inputJumpStartTime;
+    NSTimeInterval EndTime     = (NSTimeInterval) self.inputJumpEndTime;
+    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
+    SSDistance jump = {0.0f, 0.0f, 0.0f};
+    
+    if (EndTime > StartTime)
+    {
+        if (CurrentTime >= StartTime && CurrentTime <= EndTime)
+        {
+            if (_JumpDuration > 0)
+            {
+                NSUInteger JumpCounter = (CurrentTime - StartTime) / _JumpDuration;
+                double JumpRadian = (CurrentTime - (JumpCounter * _JumpDuration)) / 1000.0f;
+                
+                switch (self.inputBehavior)
+                {
+                    case ClrJumpBehavior_Quad:
+                        jump.x = pow(JumpRadian, 2) * self.inputXLead;
+                        jump.y = pow(JumpRadian, 2) * self.inputYLead;
+                        jump.z = pow(JumpRadian, 2) * self.inputZLead;
+                        break;
+                    case ClrJumpBehavior_Walk:
+                        jump.x = log(JumpRadian + 1.0f) * self.inputXLead;
+                        jump.y = log(JumpRadian + 1.0f) * self.inputYLead;
+                        jump.z = log(JumpRadian + 1.0f) * self.inputZLead;
+                        break;
+                    case ClrJumpBehavior_Arc:
+                    default:
+                        JumpRadian *= M_PI;
+                        jump.x = sin(JumpRadian) * self.inputXLead;
+                        jump.y = sin(JumpRadian) * self.inputYLead;
+                        jump.z = sin(JumpRadian) * self.inputZLead;
+                        break;
+                }
+            }
+        }
+    }
+    
+    return jump;
+}
+
 - (void)drawTexture:(id <QCPlugInContext>)context
 {
     CGLContextObj cgl_ctx = [context CGLContextObj];
-
+    
     // Translate the matrix
     GLdouble progress = [self getSlideProgress];
     GLdouble      x = self.inputAnchorX + (_X_distance * progress);
@@ -555,9 +655,10 @@ static NSArray * blendOptions;
     glScaled(sx, sy, sz);
 
     // Set New Position
-    GLdouble     nx = self.inputXPosStart + (_X_distance * progress);
-    GLdouble     ny = self.inputYPosStart + (_Y_distance * progress);
-    GLdouble     nz = self.inputZPosStart + (_Z_distance * progress);
+    SSDistance jump = [self getJumpLead];
+    GLdouble     nx = self.inputXPosStart + (_X_distance * progress) + jump.x;
+    GLdouble     ny = self.inputYPosStart + (_Y_distance * progress) + jump.y;
+    GLdouble     nz = self.inputZPosStart + (_Z_distance * progress) + jump.z;
     glTranslated((nx - x) * sx, (ny - y) * sy, nz * sz);
     
     // Set Color
@@ -568,19 +669,20 @@ static NSArray * blendOptions;
     GLdouble blue  = colorComponents[2] + (_Blue  * fade_progress);
     GLdouble alpha = colorComponents[3] + (_Alpha * fade_progress);
     glColor4f(red, green, blue, alpha);
-    
+
     // Render the textured quad by mapping the texture coordinates to the vertices
     NSRect bounds = [context bounds];
-    GLdouble retio = (bounds.size.height / bounds.size.width);
+    GLdouble retio = (GLdouble) bounds.size.height / (GLdouble) bounds.size.width;
+    GLdouble Vertex = 2.0f;
     glBegin(GL_QUADS);
         glTexCoord2d(1.0f, 1.0f);
-        glVertex2d(2.0f, retio * 2.0f);            // upper right
+        glVertex2d(Vertex, retio * Vertex);                     // upper right
         glTexCoord2d(-1.0f, 1.0f);
-        glVertex2d(-2.0f, retio * 2.0f);           // upper left
+        glVertex2d(Vertex * -1.0f, retio * Vertex);             // upper left
         glTexCoord2d(-1.0f, -1.0f);
-        glVertex2d(-2.0f, retio * (-2.0f)); // lower left
+        glVertex2d(Vertex * -1.0f, retio * Vertex * (-1.0f));   // lower left
         glTexCoord2d(1.0f, -1.0f);
-        glVertex2d(2.0f, retio * (-2.0f));  // lower right
+        glVertex2d(Vertex, retio * Vertex * (-1.0f));           // lower right
     glEnd();
 }
 
@@ -597,23 +699,14 @@ static NSArray * blendOptions;
     CGLContextObj cgl_ctx = [context CGLContextObj];
     if (cgl_ctx == NULL)
         return NO;
-    
-    // 現在の状態を保存
-    GLint saveMode;
-    glGetIntegerv(GL_MATRIX_MODE, &saveMode);
-    GLboolean saveBlend;
-    glGetBooleanv(GL_BLEND, &saveBlend);
 
-    // 初期設定
-    [self setupExecute];
-    
     id<QCPlugInInputImageSource> image = self.inputImage;
     GLuint textureName = 0;
 
     // Initialize
     if (image) {
-        if ([image lockTextureRepresentationWithColorSpace:([image shouldColorMatch] ? [context colorSpace] :
-                                                            [image imageColorSpace])
+        if ([image lockTextureRepresentationWithColorSpace:([image shouldColorMatch] ?  [context colorSpace] :
+                                                                                        [image imageColorSpace])
                                                  forBounds:[image imageBounds]])
         {
             textureName = [image textureName];
@@ -622,7 +715,11 @@ static NSArray * blendOptions;
     
     CGLSetCurrentContext(cgl_ctx);
     
-    glPushMatrix();
+    // 現在の状態を保存
+    GLint saveMode;
+    glGetIntegerv(GL_MATRIX_MODE, &saveMode);
+    GLboolean saveBlend;
+    glGetBooleanv(GL_BLEND, &saveBlend);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
@@ -640,6 +737,9 @@ static NSArray * blendOptions;
                                 normalizeCoordinates:YES];
     }
     
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
     // Get current Viewport
     GLint curViewPort[4];
     glGetIntegerv(GL_VIEWPORT, curViewPort);
@@ -649,25 +749,27 @@ static NSArray * blendOptions;
     NSRect ibounds = [image imageBounds];
     ix -= ibounds.size.width  / 2;
     iy -= ibounds.size.height / 2;
+    // ビューを設定
     glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
    
+    // 初期設定
+    [self setupExecute];
+    
     // テクスチャを描画
     [self drawTexture:context];
     
-    // ビューを設定
+    // 元のビューを設定
     glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
+
+    // Unbind the texture from the texture unit.
+    if (textureName)
+    {
+        [image unbindTextureRepresentationFromCGLContext:cgl_ctx textureUnit: GL_TEXTURE0];
+    }
     
     // 法線の正規化を終了
     glDisable(GL_NORMALIZE);
     
-    if (textureName)
-    {
-        // Unbind the texture from the texture unit.
-        [image unbindTextureRepresentationFromCGLContext:cgl_ctx textureUnit: GL_TEXTURE0];
-    }
-    
-    // Restore
-    glPopMatrix();
     if (! saveBlend)
     {
         glDisable(GL_BLEND);
