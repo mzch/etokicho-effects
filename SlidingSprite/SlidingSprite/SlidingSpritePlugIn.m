@@ -421,24 +421,37 @@ static NSArray * jumpOptions;
     glEnable(GL_BLEND);
 }
 
+- (BOOL)startExecution:(id <QCPlugInContext>)context
+{
+	// Called by Quartz Composer when rendering of the composition starts: perform any required setup for the plug-in.
+	// Return NO in case of fatal failure (this will prevent rendering of the composition to start).
+    
+	return YES;
+}
+
+- (void)enableExecution:(id <QCPlugInContext>)context
+{
+	// Called by Quartz Composer when the plug-in instance starts being used by Quartz Composer.
+}
+
 - (BOOL)setupExecute
 {
     // 変化量を求める
     _X_distance = self.inputXPosEnd - self.inputXPosStart;
     _Y_distance = self.inputYPosEnd - self.inputYPosStart;
     _Z_distance = self.inputZPosEnd - self.inputZPosStart;
-
+    
     const CGFloat * colorStart = CGColorGetComponents(self.inputColorStart);
     const CGFloat * colorEnd   = CGColorGetComponents(self.inputColorEnd);
     _Red   = colorEnd[0] - colorStart[0];
     _Green = colorEnd[1] - colorStart[1];
     _Blue  = colorEnd[2] - colorStart[2];
     _Alpha = colorEnd[3] - colorStart[3];
-
+    
     _X_scale = self.inputXScaleEnd - self.inputXScaleStart;
     _Y_scale = self.inputYScaleEnd - self.inputYScaleStart;
     _Z_scale = self.inputZScaleEnd - self.inputZScaleStart;
-
+    
     if (self.inputIsXSpin)
         _X_rotation = self.inputXAngleEnd * 360.0f;
     else
@@ -451,26 +464,13 @@ static NSArray * jumpOptions;
         _Z_rotation = self.inputZAngleEnd * 360.0f;
     else
         _Z_rotation = self.inputZAngleEnd - self.inputZAngleStart;
-
-    if (self.inputJumpEndTime > self.inputJumpStartTime && self.inputBounce > 0)
-        _JumpDuration = (self.inputJumpEndTime - self.inputJumpStartTime) / self.inputBounce;
-    else
-        _JumpDuration = 0;
-
-    return YES;
-}
-
-- (BOOL)startExecution:(id <QCPlugInContext>)context
-{
-	// Called by Quartz Composer when rendering of the composition starts: perform any required setup for the plug-in.
-	// Return NO in case of fatal failure (this will prevent rendering of the composition to start).
     
-	return YES;
-}
-
-- (void)enableExecution:(id <QCPlugInContext>)context
-{
-	// Called by Quartz Composer when the plug-in instance starts being used by Quartz Composer.
+    if (self.inputJumpEndTime > self.inputJumpStartTime && self.inputBounce > 0)
+        _JumpDuration = (NSTimeInterval)(self.inputJumpEndTime - self.inputJumpStartTime) / (NSTimeInterval)self.inputBounce;
+    else
+        _JumpDuration = 0.0f;
+    
+    return YES;
 }
 
 - (GLdouble) getSlideProgress
@@ -584,10 +584,11 @@ static NSArray * jumpOptions;
     {
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
-            if (_JumpDuration > 0)
+            if (_JumpDuration > 0.0f)
             {
-                NSUInteger JumpCounter = (CurrentTime - StartTime) / _JumpDuration;
-                double JumpRadian = (CurrentTime - (JumpCounter * _JumpDuration)) / 1000.0f;
+                NSTimeInterval quotient = (CurrentTime - StartTime) / _JumpDuration;
+                NSTimeInterval JumpCounter = floor(quotient);
+                double JumpRadian = (CurrentTime - StartTime - (JumpCounter * _JumpDuration)) / _JumpDuration;
                 
                 switch (self.inputBehavior)
                 {
@@ -620,7 +621,7 @@ static NSArray * jumpOptions;
 {
     CGLContextObj cgl_ctx = [context CGLContextObj];
     
-    // Translate the matrix
+    // move the image to the center
     GLdouble progress = [self getSlideProgress];
     GLdouble      x = self.inputAnchorX + (_X_distance * progress);
     GLdouble      y = self.inputAnchorY + (_Y_distance * progress);
@@ -653,14 +654,14 @@ static NSArray * jumpOptions;
     GLdouble     sy = self.inputYScaleStart + (_Y_scale * scale_progress);
     GLdouble     sz = self.inputZScaleStart + (_Z_scale * scale_progress);
     glScaled(sx, sy, sz);
-
+    
     // Set New Position
     SSDistance jump = [self getJumpLead];
-    GLdouble     nx = self.inputXPosStart + (_X_distance * progress) + jump.x;
-    GLdouble     ny = self.inputYPosStart + (_Y_distance * progress) + jump.y;
-    GLdouble     nz = self.inputZPosStart + (_Z_distance * progress) + jump.z;
+    GLdouble     nx = (_X_distance * progress) + jump.x;
+    GLdouble     ny = (_Y_distance * progress) + jump.y;
+    GLdouble     nz = (_Z_distance * progress) + jump.z;
     glTranslated((nx - x) * sx, (ny - y) * sy, nz * sz);
-    
+
     // Set Color
     const CGFloat * colorComponents = CGColorGetComponents(self.inputColorStart);
     GLdouble fade_progress = [self getFadeProgress];
@@ -673,16 +674,15 @@ static NSArray * jumpOptions;
     // Render the textured quad by mapping the texture coordinates to the vertices
     NSRect bounds = [context bounds];
     GLdouble retio = (GLdouble) bounds.size.height / (GLdouble) bounds.size.width;
-    GLdouble Vertex = 2.0f;
     glBegin(GL_QUADS);
         glTexCoord2d(1.0f, 1.0f);
-        glVertex2d(Vertex, retio * Vertex);                     // upper right
-        glTexCoord2d(-1.0f, 1.0f);
-        glVertex2d(Vertex * -1.0f, retio * Vertex);             // upper left
-        glTexCoord2d(-1.0f, -1.0f);
-        glVertex2d(Vertex * -1.0f, retio * Vertex * (-1.0f));   // lower left
-        glTexCoord2d(1.0f, -1.0f);
-        glVertex2d(Vertex, retio * Vertex * (-1.0f));           // lower right
+        glVertex2d(OPENGL_POSRIGHT, retio * OPENGL_POSTOP);     // upper right
+        glTexCoord2d(0.0f, 1.0f);
+        glVertex2d(OPENGL_POSLEFT,  retio * OPENGL_POSTOP);     // upper left
+        glTexCoord2d(0.0f, 0.0f);
+        glVertex2d(OPENGL_POSLEFT,  retio * OPENGL_POSBOTTOM);  // lower left
+        glTexCoord2d(1.0f, 0.0f);
+        glVertex2d(OPENGL_POSRIGHT, retio * OPENGL_POSBOTTOM);  // lower right
     glEnd();
 }
 
@@ -700,10 +700,9 @@ static NSArray * jumpOptions;
     if (cgl_ctx == NULL)
         return NO;
 
+    // テクスチャイメージを取得
     id<QCPlugInInputImageSource> image = self.inputImage;
     GLuint textureName = 0;
-
-    // Initialize
     if (image) {
         if ([image lockTextureRepresentationWithColorSpace:([image shouldColorMatch] ?  [context colorSpace] :
                                                                                         [image imageColorSpace])
@@ -737,30 +736,30 @@ static NSArray * jumpOptions;
                                 normalizeCoordinates:YES];
     }
     
+    // 画面表示クリア
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
+    
+    // 初期設定
+    [self setupExecute];
     
     // Get current Viewport
     GLint curViewPort[4];
     glGetIntegerv(GL_VIEWPORT, curViewPort);
-    // Create a new Viewport
-    GLuint ix = curViewPort[0] + curViewPort[2] / 2;
-    GLuint iy = curViewPort[1] + curViewPort[3] / 2;
-    NSRect ibounds = [image imageBounds];
+    // set a new Viewport
+    NSRect ibounds = [self.inputImage imageBounds];
+    GLuint ix = curViewPort[0] + (curViewPort[2] / 2);
+    GLuint iy = curViewPort[1] + (curViewPort[3] / 2);
     ix -= ibounds.size.width  / 2;
     iy -= ibounds.size.height / 2;
-    // ビューを設定
     glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
-   
-    // 初期設定
-    [self setupExecute];
     
     // テクスチャを描画
     [self drawTexture:context];
     
     // 元のビューを設定
     glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
-
+    
     // Unbind the texture from the texture unit.
     if (textureName)
     {

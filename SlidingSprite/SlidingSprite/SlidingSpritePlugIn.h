@@ -19,6 +19,11 @@ SSDistance;
 
 // Constant definitions
 
+#define OPENGL_POSLEFT          -1
+#define OPENGL_POSRIGHT          1
+#define OPENGL_POSTOP           OPENGL_POSRIGHT
+#define OPENGL_POSBOTTOM        OPENGL_POSLEFT
+
 // ブレンドモード
 #define BLEND_Func_Replace()    glBlendFunc(GL_ONE, GL_ZERO)
 #define BLEND_Func_Over()       glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
@@ -114,49 +119,49 @@ enum JumpBehavir {
 #define PKEY_INPUTBLENDMOD      @"inputBlendMode"
 
 #define PNAME_INPUTIMAGE        @"Image"
-#define PNAME_INPUTANCHORX      @"Image Anchor X"
-#define PNAME_INPUTANCHORY      @"Image Anchor Y"
-#define PNAME_INPUTXPOSSTART    @"X Position Start"
-#define PNAME_INPUTYPOSSTART    @"Y Position Start"
-#define PNAME_INPUTZPOSSTART    @"Z Position Start"
-#define PNAME_INPUTXPOSEND      @"X Position End"
-#define PNAME_INPUTYPOSEND      @"Y Position End"
-#define PNAME_INPUTZPOSEND      @"Z Position End"
+#define PNAME_INPUTANCHORX      @"Anchor X"
+#define PNAME_INPUTANCHORY      @"Anchor Y"
+#define PNAME_INPUTXPOSSTART    @"X Start Pos"
+#define PNAME_INPUTYPOSSTART    @"Y Start Pos"
+#define PNAME_INPUTZPOSSTART    @"Z Start Pos"
+#define PNAME_INPUTXPOSEND      @"X End Pos"
+#define PNAME_INPUTYPOSEND      @"Y End Pos"
+#define PNAME_INPUTZPOSEND      @"Z End Pos"
 #define PNAME_INPUTSTARTTIME    @"Start Time"
 #define PNAME_INPUTENDTIME      @"End Time"
 #define PNAME_INPUTCOLORSTART   @"Color Start"
 #define PNAME_INPUTCOLOREND     @"Color End"
-#define PNAME_INPUTFADESTARTTIME @"Fade Start Time"
-#define PNAME_INPUTFADEENDTIME  @"Fade End Time"
-#define PNAME_INPUTXSCALESTART  @"X Scale Start"
-#define PNAME_INPUTYSCALESTART  @"Y Scale Start"
-#define PNAME_INPUTZSCALESTART  @"Z Scale Start"
-#define PNAME_INPUTXSCALEEND    @"X Scale End"
-#define PNAME_INPUTYSCALEEND    @"Y Scale End"
-#define PNAME_INPUTZSCALEEND    @"Z Scale End"
-#define PNAME_INPUTSCALESTARTTIME @"Scale Start Time"
-#define PNAME_INPUTSCALEENDTIME  @"Scale End Time"
+#define PNAME_INPUTFADESTARTTIME @"Fade Start"
+#define PNAME_INPUTFADEENDTIME  @"Fade End"
+#define PNAME_INPUTXSCALESTART  @"X Scale From"
+#define PNAME_INPUTYSCALESTART  @"Y Scale From"
+#define PNAME_INPUTZSCALESTART  @"Z Scale From"
+#define PNAME_INPUTXSCALEEND    @"X Scale To"
+#define PNAME_INPUTYSCALEEND    @"Y Scale To"
+#define PNAME_INPUTZSCALEEND    @"Z Scale To"
+#define PNAME_INPUTSCALESTARTTIME @"Scale Start"
+#define PNAME_INPUTSCALEENDTIME  @"Scale End"
 #define PNAME_INPUTBOUNCE       @"Bounce"
 #define PNAME_INPUTXLEAD        @"X Lead"
 #define PNAME_INPUTYLEAD        @"Y Lead"
 #define PNAME_INPUTZLEAD        @"Z Lead"
-#define PNAME_INPUTJUMPSTARTTIME @"Jump Start Time"
-#define PNAME_INPUTJUMPENDTIME   @"Jump End Time"
-#define PNAME_INPUTBEHAVIOR      @"Jump Behavior"
+#define PNAME_INPUTJUMPSTARTTIME @"Jump Start"
+#define PNAME_INPUTJUMPENDTIME   @"Jump End"
+#define PNAME_INPUTBEHAVIOR      @"Jump Style"
 #define PNAME_INPUTXAXIS        @"X Axis"
 #define PNAME_INPUTYAXIS        @"Y Axis"
 #define PNAME_INPUTZAXIS        @"Z Axis"
-#define PNAME_INPUTXANGLESTART  @"X Rotation Start"
-#define PNAME_INPUTYANGLESTART  @"Y Rotation Start"
-#define PNAME_INPUTZANGLESTART  @"Z Rotation Start"
+#define PNAME_INPUTXANGLESTART  @"X Degree"
+#define PNAME_INPUTYANGLESTART  @"Y Degree"
+#define PNAME_INPUTZANGLESTART  @"Z Degree"
 #define PNAME_INPUTISXSPIN      @"Is X Spin"
 #define PNAME_INPUTISYSPIN      @"Is Y Spin"
 #define PNAME_INPUTISZSPIN      @"Is Z Spin"
-#define PNAME_INPUTXANGLEEND    @"X Rotation End"
-#define PNAME_INPUTYANGLEEND    @"Y Rotation End"
-#define PNAME_INPUTZANGLEEND    @"Z Rotation End"
-#define PNAME_INPUTSPINSTARTTIME @"Spin Start Time"
-#define PNAME_INPUTSPINENDTIME   @"Spin End Time"
+#define PNAME_INPUTXANGLEEND    @"X End Degree"
+#define PNAME_INPUTYANGLEEND    @"Y End Degree"
+#define PNAME_INPUTZANGLEEND    @"Z End Degree"
+#define PNAME_INPUTSPINSTARTTIME @"Spin Start"
+#define PNAME_INPUTSPINENDTIME   @"Spin End"
 #define PNAME_INPUTTIME         @"Time"
 #define PNAME_INPUTBLENDMOD     @"Blend Mode"
 
@@ -257,6 +262,6 @@ enum JumpBehavir {
 @property (assign) CGFloat    Green;
 @property (assign) CGFloat    Blue;
 @property (assign) CGFloat    Alpha;
-@property (assign) NSUInteger JumpDuration;
+@property (assign) NSTimeInterval JumpDuration;
 
 @end
