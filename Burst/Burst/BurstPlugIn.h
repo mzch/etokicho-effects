@@ -89,11 +89,6 @@ enum BlendMode {
 #define PKEY_INPUTZMINVELOCITY  @"inputZMinVelocity"
 #define PKEY_INPUTZMAXVELOCITY  @"inputZMaxVelocity"
 #define PKEY_INPUTATTRACTION    @"inputAttraction"
-#define PKEY_INPUTGRAVITY       @"inputGravity"
-#define PKEY_INPUTREDDELTA      @"inputRedDelta"
-#define PKEY_INPUTGREENDELTA    @"inputGreenDelta"
-#define PKEY_INPUTBLUEDELTA     @"inputBlueDelta"
-#define PKEY_INPUTOPACITYDELTA  @"inputOpacityDelta"
 #define PKEY_INPUTBLENDMODE     @"inputBlendMode"
 #define PKEY_INPUTSTARTTIME     @"inputStartTime"
 #define PKEY_INPUTENDTIME       @"inputEndTime"
@@ -117,10 +112,6 @@ enum BlendMode {
 #define PNAME_INPUTZMAXVELOCITY @"Z Max Velocity"
 #define PNAME_INPUTATTRACTION   @"Attraction"
 #define PNAME_INPUTGRAVITY      @"Gravity"
-#define PNAME_INPUTREDDELTA     @"Red Delta"
-#define PNAME_INPUTGREENDELTA   @"Green Delta"
-#define PNAME_INPUTBLUEDELTA    @"Blue Delta"
-#define PNAME_INPUTOPACITYDELTA @"Opacity Delta"
 #define PNAME_INPUTBLENDMODE    @"Blend Mode"
 #define PNAME_INPUTSTARTTIME    @"Start Time"
 #define PNAME_INPUTENDTIME      @"End Time"
@@ -140,10 +131,6 @@ enum BlendMode {
 #define PDEF_INPUTZMAXVELOCITY  1.0f
 #define PDEF_INPUTATTRACTION    0.5f
 #define PDEF_INPUTGRAVITY       0.0f
-#define PDEF_INPUTREDDELTA      0.0f
-#define PDEF_INPUTGREENDELTA    0.0f
-#define PDEF_INPUTBLUEDELTA     0.0f
-#define PDEF_INPUTOPACITYDELTA  0.0f
 #define PDEF_INPUTBLENDMODE     ClrBlendMode_Over
 #define PDEF_INPUTSETIME        0
 #define PDEF_INPUTTIME          0.0f
@@ -182,10 +169,6 @@ enum BlendMode {
 @property (assign) double     inputZMaxVelocity;
 @property (assign) double     inputAttraction;
 @property (assign) double     inputGravity;
-@property (assign) double     inputRedDelta;
-@property (assign) double     inputGreenDelta;
-@property (assign) double     inputBlueDelta;
-@property (assign) double     inputOpacityDelta;
 @property (assign) NSUInteger inputBlendMode;
 @property (assign) NSUInteger inputStartTime;
 @property (assign) NSUInteger inputEndTime;

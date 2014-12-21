@@ -12,6 +12,7 @@ Blaze.qtz| ~/Library/Compositions/
 Blink.qtz| ~/Library/Compositions/
 Bounce.qtz| ~/Library/Compositions/
 Bump.qtz| ~/Library/Compositions/
+Burst.qtz| ~/Library/Compositions/
 Draw String With FontLister.qtz| ~/Library/Compositions/
 Draw String WithOut FontLister.qtz| ~/Library/Compositions/
 Fade.qtz| ~/Library/Compositions/
@@ -24,6 +25,7 @@ Slide.qtz| ~/Library/Compositions/
 Spot Light.qtz| ~/Library/Compositions/
 Pixels To Units Coordinate.qtz| ~/Library/Graphics/Quartz Composer Patches
 AnchoredSprite.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
+Burst.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
 SlidingSprite.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
 TimerSwitch.plugin|~/Library/Graphics/Quartz Composer Plug-ins
 
@@ -46,4 +48,5 @@ TimerSwitch.plugin|~/Library/Graphics/Quartz Composer Plug-ins
 2014/11/20 Blink.qtz 追加    
 2014/11/21 Spot Light.qtz 追加    
 2014/11/23 Bounce.qtz 追加    
-2014/12/18 Slide.qtz および SlidingSprite.qtz 追加    
+2014/12/18 Slide.qtz および SlidingSprite.plugin 追加    
+2014/12/21 Burst.qtz および Burst.plugin 追加    

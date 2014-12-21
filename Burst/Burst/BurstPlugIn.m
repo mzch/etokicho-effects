@@ -38,10 +38,6 @@ static NSArray * blendOptions;
 @dynamic inputZMaxVelocity;
 @dynamic inputAttraction;
 @dynamic inputGravity;
-@dynamic inputRedDelta;
-@dynamic inputGreenDelta;
-@dynamic inputBlueDelta;
-@dynamic inputOpacityDelta;
 @dynamic inputBlendMode;
 @dynamic inputStartTime;
 @dynamic inputEndTime;
@@ -146,31 +142,6 @@ static NSArray * blendOptions;
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTATTRACTION, QCPortAttributeNameKey,
                 [NSNumber numberWithDouble:PDEF_INPUTATTRACTION], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTGRAVITY])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTGRAVITY, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTGRAVITY], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTREDDELTA])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTREDDELTA, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTREDDELTA], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTGREENDELTA])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTGREENDELTA, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTGREENDELTA], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTBLUEDELTA])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTBLUEDELTA, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTBLUEDELTA], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTOPACITYDELTA])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTOPACITYDELTA, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTOPACITYDELTA], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTBLENDMODE])
     {
@@ -283,9 +254,9 @@ static NSArray * blendOptions;
 - (void) moveToNewPosition:(double)attraction
                   Progress:(double)progress
 {
-    _speedx = _polygonWidth  * (_accelx - attraction);
-    _speedy = _polygonHeight * (_accely - _gravity - attraction);
-    _speedz = _polygonWidth  * (_accelz - attraction);
+    _speedx += _polygonWidth  * (_accelx - attraction);
+    _speedy += _polygonHeight * (_accely - _gravity - attraction);
+    _speedz += _polygonWidth  * (_accelz - attraction);
     
     _polygonX += cos(_radian) * _speedx;
     _polygonY += sin(_radian) * _speedy;
@@ -529,10 +500,6 @@ static NSArray * blendOptions;
         NSRect sc = {curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]};
         [self prepareParticles:context ScreenRect:sc];
         // 色設定
-        red   -= self.inputRedDelta * progress;
-        green -= self.inputRedDelta * progress;
-        blue  -= self.inputRedDelta * progress;
-        alpha -= self.inputRedDelta * progress;
         glColor4f(red, green, blue, alpha);
         // ポリゴン描画
         glBegin(GL_QUADS);
