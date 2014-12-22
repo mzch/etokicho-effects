@@ -236,14 +236,15 @@ static NSArray * blendOptions;
 {
     _pos = pos;
     
+    NSRect bounds  = [context bounds];
+    GLdouble retio = (GLdouble) bounds.size.height / (GLdouble) bounds.size.width;
+
     _width  = 1.0f / (double) xdiv;
-    _height = 1.0f / (double) ydiv;
+    _height = retio / (double) ydiv;
     _x = pos.x * _width;
     _y = pos.y * _height;
     _radian = atan2(_x - _anchor.x, _y - _anchor.y);
     
-    NSRect bounds  = [context bounds];
-    GLdouble retio = (GLdouble) bounds.size.height / (GLdouble) bounds.size.width;
     _polygonWidth  = pbounds.size.width  / (double) xdiv;
     _polygonHeight = pbounds.size.height / (double) ydiv;
     _polygonX      = OPENGL_POSLEFT   + (pos.x * _polygonWidth);
@@ -252,11 +253,11 @@ static NSArray * blendOptions;
 }
 
 - (void) moveToNewPosition:(double)attraction
-                  Progress:(double)progress
+                  Progress:(BurstProgress)progress
 {
-    _speedx += _polygonWidth  * (_accelx - attraction);
-    _speedy += _polygonHeight * (_accely - (pow(_gravity, 2) / 2) - attraction);
-    _speedz += _polygonWidth  * (_accelz - attraction);
+    _speedx += _polygonWidth  * (_accelx + (attraction * (_accelx < 0.0f ? -1.0f : 1.0f)));
+    _speedy += _polygonHeight * (_accely - (_gravity * pow(progress.elapsed, 2) / 2) + (attraction * (_accely < 0.0f ? -1.0f : 1.0f)));
+    _speedz += _polygonWidth  * (_accelz + (attraction * (_accelz < 0.0f ? -1.0f : 1.0f)));
     
     _polygonX += cos(_radian) * _speedx;
     _polygonY += sin(_radian) * _speedy;
@@ -375,33 +376,32 @@ static NSArray * blendOptions;
     }
 }
 
-- (GLdouble) getProgress
+- (BurstProgress) getProgress
 {
     NSTimeInterval StartTime   = (NSTimeInterval) self.inputStartTime;
     NSTimeInterval EndTime     = (NSTimeInterval) self.inputEndTime;
     NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
-    GLdouble progress = 0.0f;
+    BurstProgress progress = {0.0f, 0.0f};
     
     if (EndTime > StartTime)
     {
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
-            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
+            progress.progress = (CurrentTime - StartTime) / (EndTime - StartTime);
+            progress.elapsed  = (CurrentTime - StartTime) / 1000.0f;
         }
         else
+        if (CurrentTime > EndTime)
         {
-            progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
+            progress.progress = 1.0f;
+            progress.elapsed  = (EndTime - StartTime) / 1000.0f;
         }
-    }
-    else
-    {
-        progress = 0.0f;
     }
     return progress;
 }
 
 - (void) movePeicesToNewPositions:(id <QCPlugInContext>)context
-                         Progress:(double)progress
+                         Progress:(BurstProgress)progress
 {
     CGLContextObj cgl_ctx = [context CGLContextObj];
     
@@ -490,9 +490,9 @@ static NSArray * blendOptions;
     GLdouble alpha = colorComponents[3];
     
     // 描画
-    GLdouble progress = [self getProgress];
+    BurstProgress progress = [self getProgress];
     
-    if (progress > 0.0f && progress < 1.0f)     // 処理実行中
+    if (progress.progress > 0.0f && progress.progress < 1.0f)     // 処理実行中
     {
         // パーティクルの準備
         GLint curViewPort[4];
@@ -507,7 +507,7 @@ static NSArray * blendOptions;
         glEnd();
     }
     else
-    if (progress >= 1.0f)                       // 処理完了後
+    if (progress.progress >= 1.0f)                       // 処理完了後
     {
         // パーティクルを破棄
         if (_particles)
