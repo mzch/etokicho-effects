@@ -65,6 +65,10 @@ static NSArray * jumpOptions;
 @dynamic inputZAngleEnd;
 @dynamic inputSpinStartTime;
 @dynamic inputSpinEndTime;
+@dynamic inputBlurLength;
+@dynamic inputIsAfterImage;
+@dynamic inputBlurStartTime;
+@dynamic inputBlurEndTime;
 @dynamic inputTime;
 @dynamic inputBlendMode;
 
@@ -327,6 +331,30 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
+    if ([key isEqualToString:PKEY_INPUTBLURLENGTH])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTBLURLENGTH, QCPortAttributeNameKey,
+                [NSNumber numberWithDouble:PDEF_INPUTBLURLENGTH], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTBLURLENGTH], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PMAX_INPUTBLURLENGTH], QCPortAttributeMaximumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTISAFTERIMAGE])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTISAFTERIMAGE, QCPortAttributeNameKey,
+                [NSNumber numberWithBool:PDEF_INPUTISAFTERIMAGE], QCPortAttributeDefaultValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTBLURSTARTTIME])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTBLURSTARTTIME, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTBLURENDTIME])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTBLURENDTIME, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
+                nil];
     if ([key isEqualToString:PKEY_INPUTTIME])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTTIME, QCPortAttributeNameKey,
@@ -425,6 +453,13 @@ static NSArray * jumpOptions;
 {
 	// Called by Quartz Composer when rendering of the composition starts: perform any required setup for the plug-in.
 	// Return NO in case of fatal failure (this will prevent rendering of the composition to start).
+    CGLContextObj cgl_ctx = [context CGLContextObj];
+    if (! cgl_ctx)
+    {
+        return NO;
+    }
+    glClearAccum(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_ACCUM_BUFFER_BIT);
     
 	return YES;
 }
@@ -617,6 +652,32 @@ static NSArray * jumpOptions;
     return jump;
 }
 
+- (GLdouble) getBlurProgress
+{
+    NSTimeInterval StartTime   = (NSTimeInterval) self.inputBlurStartTime;
+    NSTimeInterval EndTime     = (NSTimeInterval) self.inputBlurEndTime;
+    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
+    GLdouble progress = 0.0f;
+    
+    if (EndTime > StartTime)
+    {
+        if (CurrentTime >= StartTime && CurrentTime <= EndTime)
+        {
+            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
+        }
+        else
+        {
+            progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
+        }
+    }
+    else
+    {
+        progress = 0.0f;
+    }
+    return progress;
+}
+
+
 - (void)transformPolygon:(id <QCPlugInContext>)context
 {
     CGLContextObj cgl_ctx = [context CGLContextObj];
@@ -741,12 +802,12 @@ static NSArray * jumpOptions;
                                 normalizeCoordinates:YES];
     }
     
+    // 初期設定
+    [self setupExecute];
+    
     // 画面表示クリア
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-
-    // 初期設定
-    [self setupExecute];
     
     // Get current Viewport
     GLint curViewPort[4];

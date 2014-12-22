@@ -115,6 +115,10 @@ enum JumpBehavir {
 #define PKEY_INPUTZANGLEEND     @"inputZAngleEnd"
 #define PKEY_INPUTSPINSTARTTIME @"inputSpinStartTime"
 #define PKEY_INPUTSPINENDTIME   @"inputSpinEndTime"
+#define PKEY_INPUTBLURLENGTH    @"inputBlurLength"
+#define PKEY_INPUTISAFTERIMAGE  @"inputIsAfterImage"
+#define PKEY_INPUTBLURSTARTTIME @"inputBlurStartTime"
+#define PKEY_INPUTBLURENDTIME   @"inputBlurEndTime"
 #define PKEY_INPUTTIME          @"inputTime"
 #define PKEY_INPUTBLENDMOD      @"inputBlendMode"
 
@@ -162,6 +166,10 @@ enum JumpBehavir {
 #define PNAME_INPUTZANGLEEND    @"Z End Degree"
 #define PNAME_INPUTSPINSTARTTIME @"Spin Start"
 #define PNAME_INPUTSPINENDTIME   @"Spin End"
+#define PNAME_INPUTBLURLENGTH    @"Blur Length"
+#define PNAME_INPUTISAFTERIMAGE  @"Is After Image"
+#define PNAME_INPUTBLURSTARTTIME @"Blur Start Time"
+#define PNAME_INPUTBLURENDTIME   @"Blur End Time"
 #define PNAME_INPUTTIME         @"Time"
 #define PNAME_INPUTBLENDMOD     @"Blend Mode"
 
@@ -198,6 +206,10 @@ enum JumpBehavir {
 #define PDEF_INPUTSETIME      0
 #define PDEF_INPUTBEHAVIOR    0
 #define PMAX_INPUTBEHAVIOR    (NumOfJumpBehavor - 1)
+#define PDEF_INPUTBLURLENGTH    0.0f
+#define PMIN_INPUTBLURLENGTH    0.0f
+#define PMAX_INPUTBLURLENGTH    100.0f
+#define PDEF_INPUTISAFTERIMAGE  NO
 
 @interface SlidingSpritePlugIn : QCPlugIn
 
@@ -246,6 +258,10 @@ enum JumpBehavir {
 @property (assign) double     inputZAngleEnd;
 @property (assign) NSUInteger inputSpinStartTime;
 @property (assign) NSUInteger inputSpinEndTime;
+@property (assign) double     inputBlurLength;
+@property (assign) BOOL       inputIsAfterImage;
+@property (assign) NSUInteger inputBlurStartTime;
+@property (assign) NSUInteger inputBlurEndTime;
 @property (assign) double     inputTime;
 @property (assign) NSUInteger inputBlendMode;
 

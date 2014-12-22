@@ -13,6 +13,14 @@
 #define OPENGL_POSTOP           OPENGL_POSRIGHT
 #define OPENGL_POSBOTTOM        OPENGL_POSLEFT
 
+// 構造体
+typedef struct
+{
+    GLdouble progress;
+    GLdouble elapsed;
+
+} BurstProgress;
+
 // クラス
 @interface BurstParticle: NSObject
 
