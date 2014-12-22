@@ -255,7 +255,7 @@ static NSArray * blendOptions;
                   Progress:(double)progress
 {
     _speedx += _polygonWidth  * (_accelx - attraction);
-    _speedy += _polygonHeight * (_accely - _gravity - attraction);
+    _speedy += _polygonHeight * (_accely - (pow(_gravity, 2) / 2) - attraction);
     _speedz += _polygonWidth  * (_accelz - attraction);
     
     _polygonX += cos(_radian) * _speedx;

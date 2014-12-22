@@ -87,42 +87,42 @@ static NSArray * jumpOptions;
     if ([key isEqualToString:PKEY_INPUTANCHORX])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTANCHORX, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTANCHORX], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTANCHORX], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTANCHORY])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTANCHORY, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTANCHORY], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTANCHORY], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTXPOSSTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXPOSSTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTXPOSITION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTXPOSITION], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYPOSSTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYPOSSTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTYPOSITION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTYPOSITION], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZPOSSTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTZPOSSTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTZPOSITION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTZPOSITION], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTXPOSEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXPOSEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTXPOSITION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTXPOSITION], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYPOSEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYPOSEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTYPOSITION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTYPOSITION], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZPOSEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTZPOSEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTZPOSITION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTZPOSITION], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTSTARTTIME])
         return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -161,32 +161,32 @@ static NSArray * jumpOptions;
     if ([key isEqualToString:PKEY_INPUTXSCALESTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXSCALESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTXSCALE], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTXSCALE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYSCALESTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYSCALESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTYSCALE], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTYSCALE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZSCALESTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTZSCALESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTZSCALE], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTZSCALE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTXSCALEEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXSCALEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTXSCALE], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTXSCALE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYSCALEEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYSCALEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTYSCALE], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTYSCALE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTSCALE],  QCPortAttributeMinimumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZSCALEEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -215,17 +215,17 @@ static NSArray * jumpOptions;
     if ([key isEqualToString:PKEY_INPUTXLEAD])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXLEAD, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYLEAD])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYLEAD, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZLEAD])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTZLEAD, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTJUMPSTARTTIME])
         return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -252,68 +252,68 @@ static NSArray * jumpOptions;
     if ([key isEqualToString:PKEY_INPUTXAXIS])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXAXIS, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTXAXIS], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTXAXIS], QCPortAttributeMinimumValueKey,
-                [NSNumber numberWithFloat:PMAX_INPUTXAXIS], QCPortAttributeMaximumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTXAXIS], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTXAXIS], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PMAX_INPUTXAXIS], QCPortAttributeMaximumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYAXIS])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYAXIS, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTYAXIS], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTYAXIS], QCPortAttributeMinimumValueKey,
-                [NSNumber numberWithFloat:PMAX_INPUTYAXIS], QCPortAttributeMaximumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTYAXIS], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTYAXIS], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PMAX_INPUTYAXIS], QCPortAttributeMaximumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZAXIS])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTZAXIS, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTZAXIS], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithFloat:PMIN_INPUTZAXIS], QCPortAttributeMinimumValueKey,
-                [NSNumber numberWithFloat:PMAX_INPUTZAXIS], QCPortAttributeMaximumValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTZAXIS], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTZAXIS], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PMAX_INPUTZAXIS], QCPortAttributeMaximumValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTXANGLESTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXANGLESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTXANGLE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTXANGLE], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYANGLESTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYANGLESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTYANGLE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTYANGLE], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZANGLESTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTZANGLESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTZANGLE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTZANGLE], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTISXSPIN])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTISXSPIN, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTISXSPIN], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTISXSPIN], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTISYSPIN])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTISYSPIN, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTISYSPIN], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTISYSPIN], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTISZSPIN])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTISZSPIN, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTISZSPIN], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTISZSPIN], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTXANGLEEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXANGLEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTXANGLE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTXANGLE], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTYANGLEEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTYANGLEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTYANGLE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTYANGLE], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTZANGLEEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTZANGLEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithFloat:PDEF_INPUTZANGLE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PDEF_INPUTZANGLE], QCPortAttributeDefaultValueKey,
                 nil];
     if ([key isEqualToString:PKEY_INPUTSPINSTARTTIME])
         return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -617,7 +617,7 @@ static NSArray * jumpOptions;
     return jump;
 }
 
-- (void)drawTexture:(id <QCPlugInContext>)context
+- (void)transformPolygon:(id <QCPlugInContext>)context
 {
     CGLContextObj cgl_ctx = [context CGLContextObj];
     
@@ -626,7 +626,7 @@ static NSArray * jumpOptions;
     GLdouble      x = self.inputAnchorX + (_X_distance * progress);
     GLdouble      y = self.inputAnchorY + (_Y_distance * progress);
     glTranslated(x, y, 0.0f);
-
+    
     // Rotate the matrix
     GLdouble spin_progress = [self getSpinProgress];
     GLdouble     ax = self.inputXAngleStart + (_X_rotation * spin_progress);
@@ -647,7 +647,7 @@ static NSArray * jumpOptions;
     vec_y = sin(rad_x) * cos(rad_y);
     vec_z = cos(rad_x) * cos(rad_y);
     glRotated(az, vec_x, vec_y, vec_z);
-
+    
     // Scale the matrix
     GLdouble scale_progress = [self getScaleProgress];
     GLdouble     sx = self.inputXScaleStart + (_X_scale * scale_progress);
@@ -661,7 +661,12 @@ static NSArray * jumpOptions;
     GLdouble     ny = (_Y_distance * progress) + jump.y;
     GLdouble     nz = (_Z_distance * progress) + jump.z;
     glTranslated((nx - x) * sx, (ny - y) * sy, nz * sz);
+}
 
+- (void)drawTexture:(id <QCPlugInContext>)context
+{
+    CGLContextObj cgl_ctx = [context CGLContextObj];
+    
     // Set Color
     const CGFloat * colorComponents = CGColorGetComponents(self.inputColorStart);
     GLdouble fade_progress = [self getFadeProgress];
@@ -739,7 +744,7 @@ static NSArray * jumpOptions;
     // 画面表示クリア
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    
+
     // 初期設定
     [self setupExecute];
     
@@ -754,9 +759,12 @@ static NSArray * jumpOptions;
     iy -= ibounds.size.height / 2;
     glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
     
+    // ポリゴンを変形
+    [self transformPolygon:context];
+    
     // テクスチャを描画
     [self drawTexture:context];
-    
+
     // 元のビューを設定
     glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
     
