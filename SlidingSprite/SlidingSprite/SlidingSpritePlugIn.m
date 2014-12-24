@@ -65,10 +65,6 @@ static NSArray * jumpOptions;
 @dynamic inputZAngleEnd;
 @dynamic inputSpinStartTime;
 @dynamic inputSpinEndTime;
-@dynamic inputBlurLength;
-@dynamic inputIsAfterImage;
-@dynamic inputBlurStartTime;
-@dynamic inputBlurEndTime;
 @dynamic inputTime;
 @dynamic inputBlendMode;
 
@@ -331,30 +327,6 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTBLURLENGTH])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTBLURLENGTH, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTBLURLENGTH], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithDouble:PMIN_INPUTBLURLENGTH], QCPortAttributeMinimumValueKey,
-                [NSNumber numberWithDouble:PMAX_INPUTBLURLENGTH], QCPortAttributeMaximumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTISAFTERIMAGE])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTISAFTERIMAGE, QCPortAttributeNameKey,
-                [NSNumber numberWithBool:PDEF_INPUTISAFTERIMAGE], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTBLURSTARTTIME])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTBLURSTARTTIME, QCPortAttributeNameKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTBLURENDTIME])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTBLURENDTIME, QCPortAttributeNameKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
-                nil];
     if ([key isEqualToString:PKEY_INPUTTIME])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTTIME, QCPortAttributeNameKey,
@@ -390,25 +362,10 @@ static NSArray * jumpOptions;
 	self = [super init];
 	if (self) {
 		// Allocate any permanent resource required by the plug-in.
-        _X_distance = 0.0f;
-        _Y_distance = 0.0f;
-        _Z_distance = 0.0f;
-        _X_rotation = 0.0f;
-        _Y_rotation = 0.0f;
-        _Z_rotation = 0.0f;
-        _X_scale    = 0.0f;
-        _Y_scale    = 0.0f;
-        _Z_scale    = 0.0f;
-        _Red        = 1.0f;
-        _Green      = 1.0f;
-        _Blue       = 1.0f;
-        _Alpha      = 1.0f;
-        _JumpDuration = 0;
 	}
-	
+    
 	return self;
 }
-
 
 @end
 
@@ -458,8 +415,6 @@ static NSArray * jumpOptions;
     {
         return NO;
     }
-    glClearAccum(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_ACCUM_BUFFER_BIT);
     
 	return YES;
 }
@@ -469,12 +424,32 @@ static NSArray * jumpOptions;
 	// Called by Quartz Composer when the plug-in instance starts being used by Quartz Composer.
 }
 
-- (BOOL)setupExecute
+- (BOOL)setupExecute:(id <QCPlugInContext>)context ScreenSpec:(NSRect)scspec
 {
+    NSRect bounds = [context bounds];
+    
+    double pixelWidth  = bounds.size.width  / scspec.size.width;
+    double pixelHeight = bounds.size.height / scspec.size.height;
+    
+    _xAnchor   = bounds.origin.x + (pixelWidth  * self.inputAnchorX);
+    _yAnchor   = bounds.origin.y + (pixelHeight * self.inputAnchorY);
+    
+    _xPosStart = bounds.origin.x + (pixelWidth  * self.inputXPosStart);
+    _yPosStart = bounds.origin.y + (pixelHeight * self.inputYPosStart);
+    _zPosStart = (self.inputZPosStart * pixelWidth);
+    
+    _xPosEnd   = bounds.origin.x + (pixelWidth  * self.inputXPosEnd);
+    _yPosEnd   = bounds.origin.y + (pixelHeight * self.inputYPosEnd);
+    _zPosEnd   = (self.inputZPosEnd * pixelWidth);
+    
+    _xLeads    = pixelWidth  * self.inputXLead;
+    _yLeads    = pixelHeight * self.inputYLead;
+    _zLeads    = pixelWidth  * self.inputZLead;
+
     // 変化量を求める
-    _X_distance = self.inputXPosEnd - self.inputXPosStart;
-    _Y_distance = self.inputYPosEnd - self.inputYPosStart;
-    _Z_distance = self.inputZPosEnd - self.inputZPosStart;
+    _X_distance = _xPosEnd - _xPosStart;
+    _Y_distance = _yPosEnd - _yPosStart;
+    _Z_distance = _zPosEnd - _zPosStart;
     
     const CGFloat * colorStart = CGColorGetComponents(self.inputColorStart);
     const CGFloat * colorEnd   = CGColorGetComponents(self.inputColorEnd);
@@ -483,9 +458,9 @@ static NSArray * jumpOptions;
     _Blue  = colorEnd[2] - colorStart[2];
     _Alpha = colorEnd[3] - colorStart[3];
     
-    _X_scale = self.inputXScaleEnd - self.inputXScaleStart;
-    _Y_scale = self.inputYScaleEnd - self.inputYScaleStart;
-    _Z_scale = self.inputZScaleEnd - self.inputZScaleStart;
+    _X_scale = (self.inputXScaleEnd - self.inputXScaleStart) / PERCENTAGE;
+    _Y_scale = (self.inputYScaleEnd - self.inputYScaleStart) / PERCENTAGE;
+    _Z_scale = (self.inputZScaleEnd - self.inputZScaleStart) / PERCENTAGE;
     
     if (self.inputIsXSpin)
         _X_rotation = self.inputXAngleEnd * 360.0f;
@@ -512,7 +487,7 @@ static NSArray * jumpOptions;
 {
     NSTimeInterval StartTime   = (NSTimeInterval) self.inputStartTime;
     NSTimeInterval EndTime     = (NSTimeInterval) self.inputEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
+    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
     GLdouble progress = 0.0f;
     
     if (EndTime > StartTime)
@@ -537,7 +512,7 @@ static NSArray * jumpOptions;
 {
     NSTimeInterval StartTime   = (NSTimeInterval) self.inputFadeStartTime;
     NSTimeInterval EndTime     = (NSTimeInterval) self.inputFadeEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
+    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
     GLdouble progress = 0.0f;
     
     if (EndTime > StartTime)
@@ -562,7 +537,7 @@ static NSArray * jumpOptions;
 {
     NSTimeInterval StartTime   = (NSTimeInterval) self.inputScaleStartTime;
     NSTimeInterval EndTime     = (NSTimeInterval) self.inputScaleEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
+    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
     GLdouble progress = 0.0f;
     
     if (EndTime > StartTime)
@@ -587,7 +562,7 @@ static NSArray * jumpOptions;
 {
     NSTimeInterval StartTime   = (NSTimeInterval) self.inputSpinStartTime;
     NSTimeInterval EndTime     = (NSTimeInterval) self.inputSpinEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
+    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
     GLdouble progress = 0.0f;
     
     if (EndTime > StartTime)
@@ -612,7 +587,7 @@ static NSArray * jumpOptions;
 {
     NSTimeInterval StartTime   = (NSTimeInterval) self.inputJumpStartTime;
     NSTimeInterval EndTime     = (NSTimeInterval) self.inputJumpEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
+    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
     SSDistance jump = {0.0f, 0.0f, 0.0f};
     
     if (EndTime > StartTime)
@@ -628,21 +603,21 @@ static NSArray * jumpOptions;
                 switch (self.inputBehavior)
                 {
                     case ClrJumpBehavior_Quad:
-                        jump.x = pow(JumpRadian, 2) * self.inputXLead;
-                        jump.y = pow(JumpRadian, 2) * self.inputYLead;
-                        jump.z = pow(JumpRadian, 2) * self.inputZLead;
+                        jump.x = pow(JumpRadian, 2) * _xLeads;
+                        jump.y = pow(JumpRadian, 2) * _yLeads;
+                        jump.z = pow(JumpRadian, 2) * _zLeads;
                         break;
                     case ClrJumpBehavior_Walk:
-                        jump.x = log(JumpRadian + 1.0f) * self.inputXLead;
-                        jump.y = log(JumpRadian + 1.0f) * self.inputYLead;
-                        jump.z = log(JumpRadian + 1.0f) * self.inputZLead;
+                        jump.x = log(JumpRadian + 1.0f) * _xLeads;
+                        jump.y = log(JumpRadian + 1.0f) * _yLeads;
+                        jump.z = log(JumpRadian + 1.0f) * _zLeads;
                         break;
                     case ClrJumpBehavior_Arc:
                     default:
                         JumpRadian *= M_PI;
-                        jump.x = sin(JumpRadian) * self.inputXLead;
-                        jump.y = sin(JumpRadian) * self.inputYLead;
-                        jump.z = sin(JumpRadian) * self.inputZLead;
+                        jump.x = sin(JumpRadian) * _xLeads;
+                        jump.y = sin(JumpRadian) * _yLeads;
+                        jump.z = sin(JumpRadian) * _zLeads;
                         break;
                 }
             }
@@ -652,42 +627,16 @@ static NSArray * jumpOptions;
     return jump;
 }
 
-- (GLdouble) getBlurProgress
-{
-    NSTimeInterval StartTime   = (NSTimeInterval) self.inputBlurStartTime;
-    NSTimeInterval EndTime     = (NSTimeInterval) self.inputBlurEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * 1000.0f;
-    GLdouble progress = 0.0f;
-    
-    if (EndTime > StartTime)
-    {
-        if (CurrentTime >= StartTime && CurrentTime <= EndTime)
-        {
-            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
-        }
-        else
-        {
-            progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
-        }
-    }
-    else
-    {
-        progress = 0.0f;
-    }
-    return progress;
-}
-
-
-- (void)transformPolygon:(id <QCPlugInContext>)context
+- (void)drawTexture:(id <QCPlugInContext>)context ScreenSpec:(NSRect)scSpec
 {
     CGLContextObj cgl_ctx = [context CGLContextObj];
     
     // move the image to the center
     GLdouble progress = [self getSlideProgress];
-    GLdouble      x = self.inputAnchorX + (_X_distance * progress);
-    GLdouble      y = self.inputAnchorY + (_Y_distance * progress);
+    GLdouble x = _xAnchor + (_X_distance * progress);
+    GLdouble y = _yAnchor + (_Y_distance * progress);
     glTranslated(x, y, 0.0f);
-    
+
     // Rotate the matrix
     GLdouble spin_progress = [self getSpinProgress];
     GLdouble     ax = self.inputXAngleStart + (_X_rotation * spin_progress);
@@ -708,25 +657,16 @@ static NSArray * jumpOptions;
     vec_y = sin(rad_x) * cos(rad_y);
     vec_z = cos(rad_x) * cos(rad_y);
     glRotated(az, vec_x, vec_y, vec_z);
-    
+
     // Scale the matrix
     GLdouble scale_progress = [self getScaleProgress];
-    GLdouble     sx = self.inputXScaleStart + (_X_scale * scale_progress);
-    GLdouble     sy = self.inputYScaleStart + (_Y_scale * scale_progress);
-    GLdouble     sz = self.inputZScaleStart + (_Z_scale * scale_progress);
+    GLdouble     sx = (self.inputXScaleStart / PERCENTAGE) + (_X_scale * scale_progress);
+    GLdouble     sy = (self.inputYScaleStart / PERCENTAGE) + (_Y_scale * scale_progress);
+    GLdouble     sz = (self.inputZScaleStart / PERCENTAGE) + (_Z_scale * scale_progress);
     glScaled(sx, sy, sz);
     
-    // Set New Position
-    SSDistance jump = [self getJumpLead];
-    GLdouble     nx = (_X_distance * progress) + jump.x;
-    GLdouble     ny = (_Y_distance * progress) + jump.y;
-    GLdouble     nz = (_Z_distance * progress) + jump.z;
-    glTranslated((nx - x) * sx, (ny - y) * sy, nz * sz);
-}
-
-- (void)drawTexture:(id <QCPlugInContext>)context
-{
-    CGLContextObj cgl_ctx = [context CGLContextObj];
+    // Set the original position
+    glTranslated(-x, -y, 0.0f);
     
     // Set Color
     const CGFloat * colorComponents = CGColorGetComponents(self.inputColorStart);
@@ -736,20 +676,27 @@ static NSArray * jumpOptions;
     GLdouble blue  = colorComponents[2] + (_Blue  * fade_progress);
     GLdouble alpha = colorComponents[3] + (_Alpha * fade_progress);
     glColor4f(red, green, blue, alpha);
-
+    
+    // New Position
+    SSDistance jump = [self getJumpLead];
+    GLdouble     nx = _xPosStart + (_X_distance * progress) + jump.x;
+    GLdouble     ny = _yPosStart + (_Y_distance * progress) + jump.y;
+    GLdouble     nz = _zPosStart + (_Z_distance * progress) + jump.z;
+    
     // Render the textured quad by mapping the texture coordinates to the vertices
     NSRect bounds = [context bounds];
-    GLdouble retio = (GLdouble) bounds.size.height / (GLdouble) bounds.size.width;
     glBegin(GL_QUADS);
-        glTexCoord2d(1.0f, 1.0f);
-        glVertex2d(OPENGL_POSRIGHT, retio * OPENGL_POSTOP);     // upper right
-        glTexCoord2d(0.0f, 1.0f);
-        glVertex2d(OPENGL_POSLEFT,  retio * OPENGL_POSTOP);     // upper left
-        glTexCoord2d(0.0f, 0.0f);
-        glVertex2d(OPENGL_POSLEFT,  retio * OPENGL_POSBOTTOM);  // lower left
-        glTexCoord2d(1.0f, 0.0f);
-        glVertex2d(OPENGL_POSRIGHT, retio * OPENGL_POSBOTTOM);  // lower right
+        glTexCoord2d(1.0f, 1.0f);       // upper right
+        glVertex3d((nx * sx) + bounds.size.width, (ny * sy) + bounds.size.height, nz * sz);
+        glTexCoord2d(0.0f, 1.0f);       // upper left
+        glVertex3d((nx * sx),                     (ny * sy) + bounds.size.height, nz * sz);
+        glTexCoord2d(0.0f, 0.0f);       // lower left
+        glVertex3d((nx * sx),                     (ny * sy),                      nz * sz);
+        glTexCoord2d(1.0f, 0.0f);       // lower right
+        glVertex3d((nx * sx) + bounds.size.width, (ny * sy),                      nz * sz);
     glEnd();
+
+    glFlush();
 }
 
 - (BOOL)execute:(id <QCPlugInContext>)context atTime:(NSTimeInterval)time withArguments:(NSDictionary *)arguments
@@ -787,12 +734,17 @@ static NSArray * jumpOptions;
     glGetBooleanv(GL_BLEND, &saveBlend);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glPushMatrix();
     
     // ブレンド処理
     [self setBlendFunc:cgl_ctx];
     
     // 法線の正規化を開始
     glEnable(GL_NORMALIZE);
+    
+    // 画面表示クリア
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
     
     // テクスチャをバインド
     if (textureName)
@@ -802,33 +754,21 @@ static NSArray * jumpOptions;
                                 normalizeCoordinates:YES];
     }
     
-    // 初期設定
-    [self setupExecute];
-    
-    // 画面表示クリア
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
     // Get current Viewport
     GLint curViewPort[4];
     glGetIntegerv(GL_VIEWPORT, curViewPort);
-    // set a new Viewport
-    NSRect ibounds = [self.inputImage imageBounds];
-    GLuint ix = curViewPort[0] + (curViewPort[2] / 2);
-    GLuint iy = curViewPort[1] + (curViewPort[3] / 2);
-    ix -= ibounds.size.width  / 2;
-    iy -= ibounds.size.height / 2;
-    glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
-    
-    // ポリゴンを変形
-    [self transformPolygon:context];
+    NSRect scsize;
+    scsize.origin.x = (CGFloat) curViewPort[0];
+    scsize.origin.y = (CGFloat) curViewPort[1];
+    scsize.size.width  = (CGFloat) curViewPort[2];
+    scsize.size.height = (CGFloat) curViewPort[3];
+
+    // 初期設定
+    [self setupExecute:context ScreenSpec:scsize];
     
     // テクスチャを描画
-    [self drawTexture:context];
+    [self drawTexture:context ScreenSpec:scsize];
 
-    // 元のビューを設定
-    glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
-    
     // Unbind the texture from the texture unit.
     if (textureName)
     {
@@ -838,6 +778,8 @@ static NSArray * jumpOptions;
     // 法線の正規化を終了
     glDisable(GL_NORMALIZE);
     
+    // 元の状態を復元
+    glPopMatrix();
     if (! saveBlend)
     {
         glDisable(GL_BLEND);

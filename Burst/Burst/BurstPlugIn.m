@@ -232,36 +232,36 @@ static NSArray * blendOptions;
                      Position:(NSPoint) pos
                          XDiv:(NSUInteger)xdiv
                          YDiv:(NSUInteger)ydiv
-                      pBounds:(NSRect)pbounds
+                  TextureRect:(NSRect)texRect
+                   polygonRect:(NSRect)pbounds
 {
     _pos = pos;
     
-    NSRect bounds  = [context bounds];
-    GLdouble retio = (GLdouble) bounds.size.height / (GLdouble) bounds.size.width;
-
-    _width  = 1.0f / (double) xdiv;
-    _height = retio / (double) ydiv;
-    _x = pos.x * _width;
-    _y = pos.y * _height;
+    _width  = texRect.size.width  / xdiv;
+    _height = texRect.size.height / ydiv;
+    _x = pos.x * _width  + texRect.origin.x;
+    _y = pos.y * _height + texRect.origin.y;
     _radian = atan2(_x - _anchor.x, _y - _anchor.y);
     
-    _polygonWidth  = pbounds.size.width  / (double) xdiv;
-    _polygonHeight = pbounds.size.height / (double) ydiv;
-    _polygonX      = OPENGL_POSLEFT   + (pos.x * _polygonWidth);
-    _polygonY      = (retio * OPENGL_POSBOTTOM) + (pos.y * _polygonHeight);
+    _polygonWidth  = pbounds.size.width;
+    _polygonHeight = pbounds.size.height;
+    _polygonX      = pbounds.origin.x + (pos.x * _polygonWidth);
+    _polygonY      = pbounds.origin.y + (pos.y * _polygonHeight);
     _polygonZ      = 0.0f;
 }
 
 - (void) moveToNewPosition:(double)attraction
                   Progress:(BurstProgress)progress
 {
-    _speedx += _polygonWidth  * (_accelx + (attraction * (_accelx < 0.0f ? -1.0f : 1.0f)));
-    _speedy += _polygonHeight * (_accely - (_gravity * pow(progress.elapsed, 2) / 2) + (attraction * (_accely < 0.0f ? -1.0f : 1.0f)));
-    _speedz += _polygonWidth  * (_accelz + (attraction * (_accelz < 0.0f ? -1.0f : 1.0f)));
+    // (attraction * (_accelx < 0.0f ? -1.0f : 1.0f))
+    _speedx += _polygonWidth  * (_accelx - (attraction * (_accelx < 0.0f ? -1.0f : 1.0f))) * progress.elapsed;
+    _speedy += _polygonHeight * (_accely - (attraction * (_accelx < 0.0f ? -1.0f : 1.0f))) * progress.elapsed;
+    _speedz += _polygonWidth  * (_accelz - (attraction * (_accelx < 0.0f ? -1.0f : 1.0f))) * progress.elapsed;
     
-    _polygonX += cos(_radian) * _speedx;
-    _polygonY += sin(_radian) * _speedy;
-    _polygonZ += _speedz;
+    _polygonX += cos(_radian) * _speedx * TIMESCALE;
+    _polygonY += sin(_radian) * _speedy * TIMESCALE;
+    _polygonY -= (_gravity * pow(progress.elapsed, 2) / 2);
+    _polygonZ += cos(_radian) * _speedz * TIMESCALE;
 }
 
 - (void) Mapping:(CGLContextObj) cgl_ctx
@@ -284,6 +284,9 @@ static NSArray * blendOptions;
 {
 	// Called by Quartz Composer when rendering of the composition starts: perform any required setup for the plug-in.
 	// Return NO in case of fatal failure (this will prevent rendering of the composition to start).
+    CGLContextObj cgl_ctx = [context CGLContextObj];
+    if (cgl_ctx == NULL)
+        return NO;
 
 	return YES;
 }
@@ -339,10 +342,15 @@ static NSArray * blendOptions;
     GLdouble pixelWidth  = bounds.size.width  / sc.size.width;
     GLdouble pixelHeight = bounds.size.height / sc.size.height;
     NSRect pbounds;
-    pbounds.origin.x = bounds.origin.x + (sc.origin.x * pixelWidth);
-    pbounds.origin.y = bounds.origin.y + (sc.origin.y * pixelHeight);
-    pbounds.size.width  = sc.size.width  * pixelWidth;
-    pbounds.size.height = sc.size.height * pixelHeight;
+    pbounds.origin.x = bounds.origin.x + (self.inputX * pixelWidth);
+    pbounds.origin.y = bounds.origin.y + (self.inputY * pixelHeight);
+    pbounds.size.width  = (CGFloat)(self.inputWidth  * pixelWidth)  / (CGFloat)self.inputHorizontalDivisor;
+    pbounds.size.height = (CGFloat)(self.inputHeight * pixelHeight) / (CGFloat)self.inputVirticalDivisor;
+    NSRect texRect;
+    texRect.size.width  = self.inputWidth  / sc.size.width;
+    texRect.size.height = self.inputHeight / sc.size.height;
+    texRect.origin.x = self.inputX / sc.size.width;
+    texRect.origin.y = self.inputY / sc.size.height;
   
     NSPoint anchor;
     anchor.x = bounds.origin.x + (self.inputAnchorX * pixelWidth);
@@ -369,7 +377,8 @@ static NSArray * blendOptions;
                            Position:pos
                                XDiv:self.inputHorizontalDivisor
                                YDiv:self.inputVirticalDivisor
-                            pBounds:pbounds];
+                        TextureRect:texRect
+                        polygonRect:pbounds];
             hrline[ii] = p;
         }
         _particles[jj] = hrline;
@@ -426,10 +435,6 @@ static NSArray * blendOptions;
 	The OpenGL context for rendering can be accessed and defined for CGL macros using:
 	CGLContextObj cgl_ctx = [context CGLContextObj];
 	*/
-    CGLContextObj cgl_ctx = [context CGLContextObj];
-    if (cgl_ctx == NULL)
-        return NO;
-    
     id<QCPlugInInputImageSource> image = self.inputImage;
     GLuint textureName = 0;
     
@@ -443,6 +448,7 @@ static NSArray * blendOptions;
         }
     }
     
+    CGLContextObj cgl_ctx = [context CGLContextObj];
     CGLSetCurrentContext(cgl_ctx);
     
     // 現在の状態を保存
@@ -474,13 +480,6 @@ static NSArray * blendOptions;
     // Get current Viewport
     GLint curViewPort[4];
     glGetIntegerv(GL_VIEWPORT, curViewPort);
-    // set a new Viewport
-    NSRect ibounds = [self.inputImage imageBounds];
-    GLuint ix = curViewPort[0] + (curViewPort[2] / 2);
-    GLuint iy = curViewPort[1] + (curViewPort[3] / 2);
-    ix -= ibounds.size.width  / 2;
-    iy -= ibounds.size.height / 2;
-    glViewport(ix, iy, ibounds.size.width, ibounds.size.height);
 
     // 色設定を取得
     const CGFloat * colorComponents = CGColorGetComponents(self.inputColor);
@@ -495,8 +494,6 @@ static NSArray * blendOptions;
     if (progress.progress > 0.0f && progress.progress < 1.0f)     // 処理実行中
     {
         // パーティクルの準備
-        GLint curViewPort[4];
-        glGetIntegerv(GL_VIEWPORT, curViewPort);
         NSRect sc = {curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]};
         [self prepareParticles:context ScreenRect:sc];
         // 色設定
@@ -541,9 +538,6 @@ static NSArray * blendOptions;
             glVertex2d(OPENGL_POSRIGHT, retio * OPENGL_POSBOTTOM);  // lower right
         glEnd();
     }
-
-    // 元のビューを設定
-    glViewport(curViewPort[0], curViewPort[1], curViewPort[2], curViewPort[3]);
 
     // Unbind the texture from the texture unit.
     if (textureName)

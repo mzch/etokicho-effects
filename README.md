@@ -17,9 +17,10 @@ Draw String With FontLister.qtz| ~/Library/Compositions/
 Draw String WithOut FontLister.qtz| ~/Library/Compositions/
 Fade.qtz| ~/Library/Compositions/
 Gleam.qtz| ~/Library/Compositions/
-Move Image.qtz| ~/Library/Compositions/
-Move.qtz| ~/Library/Compositions/
+* Move Image.qtz| ~/Library/Compositions/
+* Move.qtz| ~/Library/Compositions/
 Page Curl.qtz| ~/Library/Compositions/
+Particle System.qtz| ~/Library/Compositions/
 Shake.qtz| ~/Library/Compositions/
 Slide.qtz| ~/Library/Compositions/
 Spot Light.qtz| ~/Library/Compositions/
@@ -30,6 +31,7 @@ SlidingSprite.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
 TimerSwitch.plugin|~/Library/Graphics/Quartz Composer Plug-ins
 
 * AnchoredSprite.plugin および、TimerSwitch.plugin は、エフェクト中で使用している Quick Composer プラグインです。必ず指定位置にコピーして下さい。
+* 新規に導入する場合、```Move.qtz```と```Move Image.qtz```は不要です。
 
 　
 ## 使用方法

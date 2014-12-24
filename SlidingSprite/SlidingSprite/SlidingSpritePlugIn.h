@@ -14,15 +14,13 @@ typedef struct
     GLdouble x;
     GLdouble y;
     GLdouble z;
+    BOOL     is;
 }
 SSDistance;
 
 // Constant definitions
-
-#define OPENGL_POSLEFT          -1
-#define OPENGL_POSRIGHT          1
-#define OPENGL_POSTOP           OPENGL_POSRIGHT
-#define OPENGL_POSBOTTOM        OPENGL_POSLEFT
+#define PERCENTAGE              100.0f
+#define MILISECPERSEC           1000.0f
 
 // ブレンドモード
 #define BLEND_Func_Replace()    glBlendFunc(GL_ONE, GL_ZERO)
@@ -59,8 +57,8 @@ enum BlendMode {
 };
 
 // ジャンプの動き
-#define JUMP_ARC                @"円弧状"
-#define JUMP_WALK               @"歩く動作"
+#define JUMP_ARC                @"ぴょんぴょん"
+#define JUMP_WALK               @"歩くように"
 #define JUMP_QUAD               @"かくんかくん"
 
 enum JumpBehavir {
@@ -115,10 +113,6 @@ enum JumpBehavir {
 #define PKEY_INPUTZANGLEEND     @"inputZAngleEnd"
 #define PKEY_INPUTSPINSTARTTIME @"inputSpinStartTime"
 #define PKEY_INPUTSPINENDTIME   @"inputSpinEndTime"
-#define PKEY_INPUTBLURLENGTH    @"inputBlurLength"
-#define PKEY_INPUTISAFTERIMAGE  @"inputIsAfterImage"
-#define PKEY_INPUTBLURSTARTTIME @"inputBlurStartTime"
-#define PKEY_INPUTBLURENDTIME   @"inputBlurEndTime"
 #define PKEY_INPUTTIME          @"inputTime"
 #define PKEY_INPUTBLENDMOD      @"inputBlendMode"
 
@@ -166,10 +160,6 @@ enum JumpBehavir {
 #define PNAME_INPUTZANGLEEND    @"Z End Degree"
 #define PNAME_INPUTSPINSTARTTIME @"Spin Start"
 #define PNAME_INPUTSPINENDTIME   @"Spin End"
-#define PNAME_INPUTBLURLENGTH    @"Blur Length"
-#define PNAME_INPUTISAFTERIMAGE  @"Is After Image"
-#define PNAME_INPUTBLURSTARTTIME @"Blur Start Time"
-#define PNAME_INPUTBLURENDTIME   @"Blur End Time"
 #define PNAME_INPUTTIME         @"Time"
 #define PNAME_INPUTBLENDMOD     @"Blend Mode"
 
@@ -206,10 +196,6 @@ enum JumpBehavir {
 #define PDEF_INPUTSETIME      0
 #define PDEF_INPUTBEHAVIOR    0
 #define PMAX_INPUTBEHAVIOR    (NumOfJumpBehavor - 1)
-#define PDEF_INPUTBLURLENGTH    0.0f
-#define PMIN_INPUTBLURLENGTH    0.0f
-#define PMAX_INPUTBLURLENGTH    100.0f
-#define PDEF_INPUTISAFTERIMAGE  NO
 
 @interface SlidingSpritePlugIn : QCPlugIn
 
@@ -258,13 +244,20 @@ enum JumpBehavir {
 @property (assign) double     inputZAngleEnd;
 @property (assign) NSUInteger inputSpinStartTime;
 @property (assign) NSUInteger inputSpinEndTime;
-@property (assign) double     inputBlurLength;
-@property (assign) BOOL       inputIsAfterImage;
-@property (assign) NSUInteger inputBlurStartTime;
-@property (assign) NSUInteger inputBlurEndTime;
 @property (assign) double     inputTime;
 @property (assign) NSUInteger inputBlendMode;
 
+@property (assign) double     xAnchor;
+@property (assign) double     yAnchor;
+@property (assign) double     xPosStart;
+@property (assign) double     yPosStart;
+@property (assign) double     zPosStart;
+@property (assign) double     xPosEnd;
+@property (assign) double     yPosEnd;
+@property (assign) double     zPosEnd;
+@property (assign) double     xLeads;
+@property (assign) double     yLeads;
+@property (assign) double     zLeads;
 @property (assign) double     X_distance;
 @property (assign) double     Y_distance;
 @property (assign) double     Z_distance;

@@ -13,6 +13,8 @@
 #define OPENGL_POSTOP           OPENGL_POSRIGHT
 #define OPENGL_POSBOTTOM        OPENGL_POSLEFT
 
+#define TIMESCALE               10.0f
+
 // 構造体
 typedef struct
 {
