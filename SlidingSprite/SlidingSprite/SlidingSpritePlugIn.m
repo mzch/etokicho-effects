@@ -633,8 +633,9 @@ static NSArray * jumpOptions;
     
     // move the image to the center
     GLdouble progress = [self getSlideProgress];
-    GLdouble x = _xAnchor + (_X_distance * progress);
-    GLdouble y = _yAnchor + (_Y_distance * progress);
+    NSRect bounds = [context bounds];
+    GLdouble x = _xPosStart + (_X_distance * progress);
+    GLdouble y = _yPosStart + (_Y_distance * progress);
     glTranslated(x, y, 0.0f);
 
     // Rotate the matrix
@@ -679,21 +680,20 @@ static NSArray * jumpOptions;
     
     // New Position
     SSDistance jump = [self getJumpLead];
-    GLdouble     nx = _xPosStart + (_X_distance * progress) + jump.x;
-    GLdouble     ny = _yPosStart + (_Y_distance * progress) + jump.y;
-    GLdouble     nz = _zPosStart + (_Z_distance * progress) + jump.z;
+    GLdouble     nx = (bounds.origin.x + _xPosStart - _xAnchor + (_X_distance * progress) + jump.x);
+    GLdouble     ny = (bounds.origin.y + _yPosStart - _yAnchor + (_Y_distance * progress) + jump.y);
+    GLdouble     nz = (_zPosStart + (_Z_distance * progress) + jump.z);
     
     // Render the textured quad by mapping the texture coordinates to the vertices
-    NSRect bounds = [context bounds];
     glBegin(GL_QUADS);
         glTexCoord2d(1.0f, 1.0f);       // upper right
-        glVertex3d((nx * sx) + bounds.size.width, (ny * sy) + bounds.size.height, nz * sz);
+        glVertex3d(nx + bounds.size.width, ny + bounds.size.height, nz);
         glTexCoord2d(0.0f, 1.0f);       // upper left
-        glVertex3d((nx * sx),                     (ny * sy) + bounds.size.height, nz * sz);
+        glVertex3d(nx,                     ny + bounds.size.height, nz);
         glTexCoord2d(0.0f, 0.0f);       // lower left
-        glVertex3d((nx * sx),                     (ny * sy),                      nz * sz);
+        glVertex3d(nx,                     ny,                      nz);
         glTexCoord2d(1.0f, 0.0f);       // lower right
-        glVertex3d((nx * sx) + bounds.size.width, (ny * sy),                      nz * sz);
+        glVertex3d(nx + bounds.size.width, ny,                      nz);
     glEnd();
 
     glFlush();
