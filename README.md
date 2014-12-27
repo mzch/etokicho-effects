@@ -16,6 +16,7 @@ Burst.qtz| ~/Library/Compositions/
 Draw String With FontLister.qtz| ~/Library/Compositions/
 Draw String WithOut FontLister.qtz| ~/Library/Compositions/
 Fade.qtz| ~/Library/Compositions/
+Foggy.qtz| ~/Library/Compositions/
 Gleam.qtz| ~/Library/Compositions/
 * Move Image.qtz| ~/Library/Compositions/
 * Move.qtz| ~/Library/Compositions/
@@ -24,6 +25,7 @@ Particle System.qtz| ~/Library/Compositions/
 Shake.qtz| ~/Library/Compositions/
 Slide.qtz| ~/Library/Compositions/
 Spot Light.qtz| ~/Library/Compositions/
+Ultra Q.qtz| ~/Library/Compositions/
 Pixels To Units Coordinate.qtz| ~/Library/Graphics/Quartz Composer Patches
 AnchoredSprite.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
 Burst.plugin| ~/Library/Graphics/Quartz Composer Plug-ins
