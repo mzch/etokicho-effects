@@ -32,10 +32,13 @@ static NSArray * jumpOptions;
 @dynamic inputZPosEnd;
 @dynamic inputStartTime;
 @dynamic inputEndTime;
-@dynamic inputColorStart;
-@dynamic inputColorEnd;
-@dynamic inputFadeStartTime;
-@dynamic inputFadeEndTime;
+@dynamic inputColor1;
+@dynamic inputColor2;
+@dynamic inputColor3;
+@dynamic inputFadeInStart;
+@dynamic inputFadeInEnd;
+@dynamic inputFadeOutStart;
+@dynamic inputFadeOutEnd;
 @dynamic inputXScaleStart;
 @dynamic inputYScaleStart;
 @dynamic inputZScaleStart;
@@ -136,25 +139,42 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTCOLORSTART])
+    if ([key isEqualToString:PKEY_INPUTCOLOR1])
         return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTCOLORSTART, QCPortAttributeNameKey,
+                PNAME_INPUTCOLOR1, QCPortAttributeNameKey,
                 PDEF_INPUTCOLOR, QCPortAttributeDefaultValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTCOLOREND])
+    if ([key isEqualToString:PKEY_INPUTCOLOR2])
         return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTCOLOREND, QCPortAttributeNameKey,
+                PNAME_INPUTCOLOR2, QCPortAttributeNameKey,
                 PDEF_INPUTCOLOR, QCPortAttributeDefaultValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTFADESTARTTIME])
+    if ([key isEqualToString:PKEY_INPUTCOLOR3])
         return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTFADESTARTTIME, QCPortAttributeNameKey,
+                PNAME_INPUTCOLOR3, QCPortAttributeNameKey,
+                PDEF_INPUTCOLOR, QCPortAttributeDefaultValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTFADEINSTART])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTFADEINSTART, QCPortAttributeNameKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTFADEENDTIME])
+    if ([key isEqualToString:PKEY_INPUTFADEINEND])
         return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTFADEENDTIME, QCPortAttributeNameKey,
+                PNAME_INPUTFADEINEND, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTFADEOUTSTART])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTFADEOUTSTART, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTFADEOUTEND])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTFADEOUTEND, QCPortAttributeNameKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
@@ -451,12 +471,17 @@ static NSArray * jumpOptions;
     _Y_distance = _yPosEnd - _yPosStart;
     _Z_distance = _zPosEnd - _zPosStart;
     
-    const CGFloat * colorStart = CGColorGetComponents(self.inputColorStart);
-    const CGFloat * colorEnd   = CGColorGetComponents(self.inputColorEnd);
-    _Red   = colorEnd[0] - colorStart[0];
-    _Green = colorEnd[1] - colorStart[1];
-    _Blue  = colorEnd[2] - colorStart[2];
-    _Alpha = colorEnd[3] - colorStart[3];
+    const CGFloat * color1 = CGColorGetComponents(self.inputColor1);
+    const CGFloat * color2 = CGColorGetComponents(self.inputColor2);
+    _Red1   = color2[0] - color1[0];
+    _Green1 = color2[1] - color1[1];
+    _Blue1  = color2[2] - color1[2];
+    _Alpha1 = color2[3] - color1[3];
+    const CGFloat * color3 = CGColorGetComponents(self.inputColor3);
+    _Red2   = color3[0] - color2[0];
+    _Green2 = color3[1] - color2[1];
+    _Blue2  = color3[2] - color2[2];
+    _Alpha2 = color3[3] - color2[3];
     
     _X_scale = (self.inputXScaleEnd - self.inputXScaleStart) / PERCENTAGE;
     _Y_scale = (self.inputYScaleEnd - self.inputYScaleStart) / PERCENTAGE;
@@ -508,10 +533,35 @@ static NSArray * jumpOptions;
     return progress;
 }
 
-- (GLdouble) getFadeProgress
+- (GLdouble) getFadeInProgress
 {
-    NSTimeInterval StartTime   = (NSTimeInterval) self.inputFadeStartTime;
-    NSTimeInterval EndTime     = (NSTimeInterval) self.inputFadeEndTime;
+    NSTimeInterval StartTime   = (NSTimeInterval) self.inputFadeInStart;
+    NSTimeInterval EndTime     = (NSTimeInterval) self.inputFadeInEnd;
+    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
+    GLdouble progress = 0.0f;
+    
+    if (EndTime > StartTime)
+    {
+        if (CurrentTime >= StartTime && CurrentTime <= EndTime)
+        {
+            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
+        }
+        else
+        {
+            progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
+        }
+    }
+    else
+    {
+        progress = 0.0f;
+    }
+    return progress;
+}
+
+- (GLdouble) getFadeOutProgress
+{
+    NSTimeInterval StartTime   = (NSTimeInterval) self.inputFadeOutStart;
+    NSTimeInterval EndTime     = (NSTimeInterval) self.inputFadeOutEnd;
     NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
     GLdouble progress = 0.0f;
     
@@ -670,14 +720,30 @@ static NSArray * jumpOptions;
     glTranslated(-x, -y, 0.0f);
     
     // Set Color
-    const CGFloat * colorComponents = CGColorGetComponents(self.inputColorStart);
-    GLdouble fade_progress = [self getFadeProgress];
-    GLdouble red   = colorComponents[0] + (_Red   * fade_progress);
-    GLdouble green = colorComponents[1] + (_Green * fade_progress);
-    GLdouble blue  = colorComponents[2] + (_Blue  * fade_progress);
-    GLdouble alpha = colorComponents[3] + (_Alpha * fade_progress);
+    const CGFloat * colorComponents = CGColorGetComponents(self.inputColor1);
+    GLdouble fdin_progress = [self getFadeInProgress];
+    GLdouble fout_progress = [self getFadeOutProgress];
+    GLdouble red   = colorComponents[0];
+    GLdouble green = colorComponents[1];
+    GLdouble blue  = colorComponents[2];
+    GLdouble alpha = colorComponents[3];
+    if (fdin_progress > 0.0f && fdin_progress < 1.0f)
+    {
+        red   += _Red1   * fdin_progress;
+        green += _Green1 * fdin_progress;
+        blue  += _Blue1  * fdin_progress;
+        alpha += _Alpha1 * fdin_progress;
+    }
+    else
+    if (fout_progress > 0.0f && fout_progress < 1.0f)
+    {
+        const CGFloat * colorComponents = CGColorGetComponents(self.inputColor2);
+        red   = colorComponents[0] + (_Red2   * fout_progress);
+        green = colorComponents[1] + (_Green2 * fout_progress);
+        blue  = colorComponents[2] + (_Blue2  * fout_progress);
+        alpha = colorComponents[3] + (_Alpha2 * fout_progress);
+    }
     glColor4f(red, green, blue, alpha);
-    
     // New Position
     SSDistance jump = [self getJumpLead];
     GLdouble     nx = (bounds.origin.x + _xPosStart - _xAnchor + (_X_distance * progress) + jump.x);

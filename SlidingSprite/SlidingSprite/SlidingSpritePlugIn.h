@@ -80,10 +80,13 @@ enum JumpBehavir {
 #define PKEY_INPUTZPOSEND       @"inputZPosEnd"
 #define PKEY_INPUTSTARTTIME     @"inputStartTime"
 #define PKEY_INPUTENDTIME       @"inputEndTime"
-#define PKEY_INPUTCOLORSTART    @"inputColorStart"
-#define PKEY_INPUTCOLOREND      @"inputColorEnd"
-#define PKEY_INPUTFADESTARTTIME  @"inputFadeStartTime"
-#define PKEY_INPUTFADEENDTIME   @"inputFadeEndTime"
+#define PKEY_INPUTCOLOR1        @"inputColor1"
+#define PKEY_INPUTCOLOR2        @"inputColor2"
+#define PKEY_INPUTCOLOR3        @"inputColor3"
+#define PKEY_INPUTFADEINSTART   @"inputFadeInStart"
+#define PKEY_INPUTFADEINEND     @"inputFadeInEnd"
+#define PKEY_INPUTFADEOUTSTART  @"inputFadeOutStart"
+#define PKEY_INPUTFADEOUTEND    @"inputFadeOutEnd"
 #define PKEY_INPUTXSCALESTART   @"inputXScaleStart"
 #define PKEY_INPUTYSCALESTART   @"inputYScaleStart"
 #define PKEY_INPUTZSCALESTART   @"inputZScaleStart"
@@ -127,10 +130,13 @@ enum JumpBehavir {
 #define PNAME_INPUTZPOSEND      @"Z End Pos"
 #define PNAME_INPUTSTARTTIME    @"Start Time"
 #define PNAME_INPUTENDTIME      @"End Time"
-#define PNAME_INPUTCOLORSTART   @"Color Start"
-#define PNAME_INPUTCOLOREND     @"Color End"
-#define PNAME_INPUTFADESTARTTIME @"Fade Start"
-#define PNAME_INPUTFADEENDTIME  @"Fade End"
+#define PNAME_INPUTCOLOR1       @"Color #1"
+#define PNAME_INPUTCOLOR2       @"Color #2"
+#define PNAME_INPUTCOLOR3       @"Color #3"
+#define PNAME_INPUTFADEINSTART  @"Fade In Start"
+#define PNAME_INPUTFADEINEND    @"Fade In End"
+#define PNAME_INPUTFADEOUTSTART @"Fade Out Start"
+#define PNAME_INPUTFADEOUTEND   @"Fade Out End"
 #define PNAME_INPUTXSCALESTART  @"X Scale From"
 #define PNAME_INPUTYSCALESTART  @"Y Scale From"
 #define PNAME_INPUTZSCALESTART  @"Z Scale From"
@@ -211,10 +217,13 @@ enum JumpBehavir {
 @property (assign) double     inputZPosEnd;
 @property (assign) NSUInteger inputStartTime;
 @property (assign) NSUInteger inputEndTime;
-@property (assign) CGColorRef inputColorStart;
-@property (assign) CGColorRef inputColorEnd;
-@property (assign) NSUInteger inputFadeStartTime;
-@property (assign) NSUInteger inputFadeEndTime;
+@property (assign) CGColorRef inputColor1;
+@property (assign) CGColorRef inputColor2;
+@property (assign) CGColorRef inputColor3;
+@property (assign) NSUInteger inputFadeInStart;
+@property (assign) NSUInteger inputFadeInEnd;
+@property (assign) NSUInteger inputFadeOutStart;
+@property (assign) NSUInteger inputFadeOutEnd;
 @property (assign) double     inputXScaleStart;
 @property (assign) double     inputYScaleStart;
 @property (assign) double     inputZScaleStart;
@@ -267,10 +276,14 @@ enum JumpBehavir {
 @property (assign) double     X_scale;
 @property (assign) double     Y_scale;
 @property (assign) double     Z_scale;
-@property (assign) CGFloat    Red;
-@property (assign) CGFloat    Green;
-@property (assign) CGFloat    Blue;
-@property (assign) CGFloat    Alpha;
+@property (assign) CGFloat    Red1;
+@property (assign) CGFloat    Green1;
+@property (assign) CGFloat    Blue1;
+@property (assign) CGFloat    Alpha1;
+@property (assign) CGFloat    Red2;
+@property (assign) CGFloat    Green2;
+@property (assign) CGFloat    Blue2;
+@property (assign) CGFloat    Alpha2;
 @property (assign) NSTimeInterval JumpDuration;
 
 @end
