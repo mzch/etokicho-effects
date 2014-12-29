@@ -734,14 +734,28 @@ static NSArray * jumpOptions;
         blue  += _Blue1  * fdin_progress;
         alpha += _Alpha1 * fdin_progress;
     }
-    else
-    if (fout_progress > 0.0f && fout_progress < 1.0f)
+    if (fdin_progress >= 1.0f)
     {
-        const CGFloat * colorComponents = CGColorGetComponents(self.inputColor2);
-        red   = colorComponents[0] + (_Red2   * fout_progress);
-        green = colorComponents[1] + (_Green2 * fout_progress);
-        blue  = colorComponents[2] + (_Blue2  * fout_progress);
-        alpha = colorComponents[3] + (_Alpha2 * fout_progress);
+        colorComponents = CGColorGetComponents(self.inputColor2);
+        red   = colorComponents[0];
+        green = colorComponents[1];
+        blue  = colorComponents[2];
+        alpha = colorComponents[3];
+        if (fout_progress > 0.0f && fout_progress < 1.0f)
+        {
+            red   += _Red2   * fout_progress;
+            green += _Green2 * fout_progress;
+            blue  += _Blue2  * fout_progress;
+            alpha += _Alpha2 * fout_progress;
+        }
+    }
+    if (fout_progress >= 1.0f)
+    {
+        colorComponents = CGColorGetComponents(self.inputColor3);
+        red   = colorComponents[0];
+        green = colorComponents[1];
+        blue  = colorComponents[2];
+        alpha = colorComponents[3];
     }
     glColor4f(red, green, blue, alpha);
     // New Position
