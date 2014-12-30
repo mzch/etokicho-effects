@@ -180,9 +180,9 @@ enum JumpBehavir {
 #define PDEF_INPUTXANGLE      0.0f
 #define PDEF_INPUTYANGLE      0.0f
 #define PDEF_INPUTZANGLE      0.0f
-#define PDEF_INPUTXSCALE      1.0f
-#define PDEF_INPUTYSCALE      1.0f
-#define PDEF_INPUTZSCALE      1.0f
+#define PDEF_INPUTXSCALE      100.0f
+#define PDEF_INPUTYSCALE      100.0f
+#define PDEF_INPUTZSCALE      100.0f
 #define PMIN_INPUTSCALE       0.0f
 #define PDEF_INPUTCOLOR       CGColorCreateGenericRGB(1.0f, 1.0f, 1.0f, 1.0f)
 #define PDEF_INPUTBLENDMOD    ClrBlendMode_Over
