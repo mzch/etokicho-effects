@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A4506CEA1A41C904005B802E"
-               BuildableName = "SlidingSprite.plugin"
-               BlueprintName = "SlidingSprite"
-               ReferencedContainer = "container:SlidingSprite.xcodeproj">
+               BlueprintIdentifier = "A4B471931A5274C10065228C"
+               BuildableName = "Spining Sprite.plugin"
+               BlueprintName = "Spining Sprite"
+               ReferencedContainer = "container:Spining Sprite.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -42,10 +42,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A4506CEA1A41C904005B802E"
-            BuildableName = "SlidingSprite.plugin"
-            BlueprintName = "SlidingSprite"
-            ReferencedContainer = "container:SlidingSprite.xcodeproj">
+            BlueprintIdentifier = "A4B471931A5274C10065228C"
+            BuildableName = "Spining Sprite.plugin"
+            BlueprintName = "Spining Sprite"
+            ReferencedContainer = "container:Spining Sprite.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -60,10 +60,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A4506CEA1A41C904005B802E"
-            BuildableName = "SlidingSprite.plugin"
-            BlueprintName = "SlidingSprite"
-            ReferencedContainer = "container:SlidingSprite.xcodeproj">
+            BlueprintIdentifier = "A4B471931A5274C10065228C"
+            BuildableName = "Spining Sprite.plugin"
+            BlueprintName = "Spining Sprite"
+            ReferencedContainer = "container:Spining Sprite.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

@@ -24,7 +24,7 @@
 	<string>Copyright © 2014 Koichi MATSUMOTO. All rights reserved.</string>
 	<key>QCPlugInClasses</key>
 	<array>
-		<string>SlidingSpritePlugIn</string>
+		<string>Spining_SpritePlugIn</string>
 	</array>
 </dict>
 </plist>

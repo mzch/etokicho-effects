@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A4506CF21A41C904005B802E /* SlidingSpritePlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = A4506CF11A41C904005B802E /* SlidingSpritePlugIn.m */; };
+		A4B471B21A52AAB70065228C /* Sliding_SpritePlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B471B11A52AAB70065228C /* Sliding_SpritePlugIn.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A4506CEB1A41C904005B802E /* SlidingSprite.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlidingSprite.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		A4506CEF1A41C904005B802E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A4506CF01A41C904005B802E /* SlidingSpritePlugIn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlidingSpritePlugIn.h; sourceTree = "<group>"; };
-		A4506CF11A41C904005B802E /* SlidingSpritePlugIn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SlidingSpritePlugIn.m; sourceTree = "<group>"; };
+		A4B471AB1A52AAB70065228C /* Sliding Sprite.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Sliding Sprite.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4B471AF1A52AAB70065228C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A4B471B01A52AAB70065228C /* Sliding_SpritePlugIn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sliding_SpritePlugIn.h; sourceTree = "<group>"; };
+		A4B471B11A52AAB70065228C /* Sliding_SpritePlugIn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Sliding_SpritePlugIn.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A4506CE71A41C904005B802E /* Frameworks */ = {
+		A4B471A71A52AAB70065228C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -28,36 +28,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A4506CE11A41C904005B802E = {
+		A4B471A11A52AAB70065228C = {
 			isa = PBXGroup;
 			children = (
-				A4506CED1A41C904005B802E /* SlidingSprite */,
-				A4506CEC1A41C904005B802E /* Products */,
+				A4B471AD1A52AAB70065228C /* Sliding Sprite */,
+				A4B471AC1A52AAB70065228C /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A4506CEC1A41C904005B802E /* Products */ = {
+		A4B471AC1A52AAB70065228C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A4506CEB1A41C904005B802E /* SlidingSprite.plugin */,
+				A4B471AB1A52AAB70065228C /* Sliding Sprite.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A4506CED1A41C904005B802E /* SlidingSprite */ = {
+		A4B471AD1A52AAB70065228C /* Sliding Sprite */ = {
 			isa = PBXGroup;
 			children = (
-				A4506CF01A41C904005B802E /* SlidingSpritePlugIn.h */,
-				A4506CF11A41C904005B802E /* SlidingSpritePlugIn.m */,
-				A4506CEE1A41C904005B802E /* Supporting Files */,
+				A4B471B01A52AAB70065228C /* Sliding_SpritePlugIn.h */,
+				A4B471B11A52AAB70065228C /* Sliding_SpritePlugIn.m */,
+				A4B471AE1A52AAB70065228C /* Supporting Files */,
 			);
-			path = SlidingSprite;
+			path = "Sliding Sprite";
 			sourceTree = "<group>";
 		};
-		A4506CEE1A41C904005B802E /* Supporting Files */ = {
+		A4B471AE1A52AAB70065228C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				A4506CEF1A41C904005B802E /* Info.plist */,
+				A4B471AF1A52AAB70065228C /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -65,57 +65,57 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A4506CEA1A41C904005B802E /* SlidingSprite */ = {
+		A4B471AA1A52AAB70065228C /* Sliding Sprite */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A4506CF51A41C904005B802E /* Build configuration list for PBXNativeTarget "SlidingSprite" */;
+			buildConfigurationList = A4B471B51A52AAB70065228C /* Build configuration list for PBXNativeTarget "Sliding Sprite" */;
 			buildPhases = (
-				A4506CE61A41C904005B802E /* Sources */,
-				A4506CE71A41C904005B802E /* Frameworks */,
-				A4506CE81A41C904005B802E /* Resources */,
-				A4506CE91A41C904005B802E /* ShellScript */,
+				A4B471A61A52AAB70065228C /* Sources */,
+				A4B471A71A52AAB70065228C /* Frameworks */,
+				A4B471A81A52AAB70065228C /* Resources */,
+				A4B471A91A52AAB70065228C /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = SlidingSprite;
-			productName = SlidingSprite;
-			productReference = A4506CEB1A41C904005B802E /* SlidingSprite.plugin */;
+			name = "Sliding Sprite";
+			productName = "Sliding Sprite";
+			productReference = A4B471AB1A52AAB70065228C /* Sliding Sprite.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A4506CE21A41C904005B802E /* Project object */ = {
+		A4B471A21A52AAB70065228C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Koichi MATSUMOTO";
 				TargetAttributes = {
-					A4506CEA1A41C904005B802E = {
+					A4B471AA1A52AAB70065228C = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
 				};
 			};
-			buildConfigurationList = A4506CE51A41C904005B802E /* Build configuration list for PBXProject "SlidingSprite" */;
+			buildConfigurationList = A4B471A51A52AAB70065228C /* Build configuration list for PBXProject "Sliding Sprite" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = A4506CE11A41C904005B802E;
-			productRefGroup = A4506CEC1A41C904005B802E /* Products */;
+			mainGroup = A4B471A11A52AAB70065228C;
+			productRefGroup = A4B471AC1A52AAB70065228C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A4506CEA1A41C904005B802E /* SlidingSprite */,
+				A4B471AA1A52AAB70065228C /* Sliding Sprite */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A4506CE81A41C904005B802E /* Resources */ = {
+		A4B471A81A52AAB70065228C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -125,7 +125,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A4506CE91A41C904005B802E /* ShellScript */ = {
+		A4B471A91A52AAB70065228C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -136,23 +136,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This shell script simply copies the built plug-in to \"~/Library/Graphics/Quartz Composer Plug-Ins\" and overrides any previous version at that location\n\nmkdir -p \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins\"\nrm -rf \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/SlidingSprite.plugin\"\ncp -rf \"$BUILT_PRODUCTS_DIR/SlidingSprite.plugin\" \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/\"\n";
+			shellScript = "# This shell script simply copies the built plug-in to \"~/Library/Graphics/Quartz Composer Plug-Ins\" and overrides any previous version at that location\n\nmkdir -p \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins\"\nrm -rf \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/Sliding Sprite.plugin\"\ncp -rf \"$BUILT_PRODUCTS_DIR/Sliding Sprite.plugin\" \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A4506CE61A41C904005B802E /* Sources */ = {
+		A4B471A61A52AAB70065228C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4506CF21A41C904005B802E /* SlidingSpritePlugIn.m in Sources */,
+				A4B471B21A52AAB70065228C /* Sliding_SpritePlugIn.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A4506CF31A41C904005B802E /* Debug */ = {
+		A4B471B31A52AAB70065228C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -192,7 +192,7 @@
 			};
 			name = Debug;
 		};
-		A4506CF41A41C904005B802E /* Release */ = {
+		A4B471B41A52AAB70065228C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -226,22 +226,22 @@
 			};
 			name = Release;
 		};
-		A4506CF61A41C904005B802E /* Debug */ = {
+		A4B471B61A52AAB70065228C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = SlidingSprite/Info.plist;
+				INFOPLIST_FILE = "Sliding Sprite/Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Debug;
 		};
-		A4506CF71A41C904005B802E /* Release */ = {
+		A4B471B71A52AAB70065228C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = SlidingSprite/Info.plist;
+				INFOPLIST_FILE = "Sliding Sprite/Info.plist";
 				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = plugin;
@@ -251,24 +251,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A4506CE51A41C904005B802E /* Build configuration list for PBXProject "SlidingSprite" */ = {
+		A4B471A51A52AAB70065228C /* Build configuration list for PBXProject "Sliding Sprite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A4506CF31A41C904005B802E /* Debug */,
-				A4506CF41A41C904005B802E /* Release */,
+				A4B471B31A52AAB70065228C /* Debug */,
+				A4B471B41A52AAB70065228C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A4506CF51A41C904005B802E /* Build configuration list for PBXNativeTarget "SlidingSprite" */ = {
+		A4B471B51A52AAB70065228C /* Build configuration list for PBXNativeTarget "Sliding Sprite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A4506CF61A41C904005B802E /* Debug */,
-				A4506CF71A41C904005B802E /* Release */,
+				A4B471B61A52AAB70065228C /* Debug */,
+				A4B471B71A52AAB70065228C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = A4506CE21A41C904005B802E /* Project object */;
+	rootObject = A4B471A21A52AAB70065228C /* Project object */;
 }
