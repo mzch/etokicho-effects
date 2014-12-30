@@ -8,6 +8,12 @@
 
 #import <Quartz/Quartz.h>
 
+// Type definitions
+
+
+// Constant definitions
+#define MILISECPERSEC               1000.0f
+
 // ブレンドモード
 #define BLEND_Func_Replace()        glBlendFunc(GL_ONE, GL_ZERO)
 #define BLEND_Func_Over()           glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
@@ -79,15 +85,15 @@ enum BlendMode {
 
 #define PDEF_INPUTANCHORX           0
 #define PDEF_INPUTANCHORY           0
-#define PDEF_INPUTAXIS              0
-#define PMIN_INPUTAXIS              -180
-#define PMAX_INPUTAXIS              180
+#define PDEF_INPUTAXIS              0.0f
+#define PMIN_INPUTAXIS              -180.0f
+#define PMAX_INPUTAXIS              180.0f
 #define PDEF_INPUTSPEED             0.0f
-#define PMIN_INPUTSPEED             -100.0f
-#define PMAX_INPUTSPEED             100.0f
+#define PMIN_INPUTSPEED             -3600.0f
+#define PMAX_INPUTSPEED             3600.0f
 #define PDEF_INPUTACCEL             0.0f
-#define PMIN_INPUTACCEL             0.0f
-#define PMAX_INPUTACCEL             100.0f
+#define PMIN_INPUTACCEL             -360.0f
+#define PMAX_INPUTACCEL             360.0f
 #define PDEF_INPUTSTARTTIME         0
 #define PDEF_INPUTENDTIME           0
 #define PDEF_INPUTTIME              0.0f
@@ -102,9 +108,9 @@ enum BlendMode {
 //@property (copy) NSString* outputBar;
 @property (assign) NSUInteger inputAnchorX;
 @property (assign) NSUInteger inputAnchorY;
-@property (assign) NSUInteger inputXAxis;
-@property (assign) NSUInteger inputYAxis;
-@property (assign) NSUInteger inputZAxis;
+@property (assign) double     inputXAxis;
+@property (assign) double     inputYAxis;
+@property (assign) double     inputZAxis;
 @property (assign) double     inputXSpeed;
 @property (assign) double     inputXAccel;
 @property (assign) double     inputYSpeed;
@@ -115,5 +121,26 @@ enum BlendMode {
 @property (assign) NSUInteger inputEndTime;
 @property (assign) double     inputTime;
 @property (assign) NSUInteger inputBlendMode;
+
+@property (assign) double     xAnchor;
+@property (assign) double     yAnchor;
+
+#if 0
+@property (assign) double     xLeads;
+@property (assign) double     yLeads;
+@property (assign) double     zLeads;
+@property (assign) double     X_scale;
+@property (assign) double     Y_scale;
+@property (assign) double     Z_scale;
+@property (assign) CGFloat    Red1;
+@property (assign) CGFloat    Green1;
+@property (assign) CGFloat    Blue1;
+@property (assign) CGFloat    Alpha1;
+@property (assign) CGFloat    Red2;
+@property (assign) CGFloat    Green2;
+@property (assign) CGFloat    Blue2;
+@property (assign) CGFloat    Alpha2;
+@property (assign) NSTimeInterval JumpDuration;
+#endif
 
 @end

@@ -763,14 +763,14 @@ static NSArray * jumpOptions;
     
     // Render the textured quad by mapping the texture coordinates to the vertices
     glBegin(GL_QUADS);
-    glTexCoord2d(1.0f, 1.0f);       // upper right
-    glVertex3d(nx + bounds.size.width, ny + bounds.size.height, nz);
-    glTexCoord2d(0.0f, 1.0f);       // upper left
-    glVertex3d(nx,                     ny + bounds.size.height, nz);
-    glTexCoord2d(0.0f, 0.0f);       // lower left
-    glVertex3d(nx,                     ny,                      nz);
-    glTexCoord2d(1.0f, 0.0f);       // lower right
-    glVertex3d(nx + bounds.size.width, ny,                      nz);
+        glTexCoord2d(1.0f, 1.0f);       // upper right
+        glVertex3d(nx + bounds.size.width, ny + bounds.size.height, nz);
+        glTexCoord2d(0.0f, 1.0f);       // upper left
+        glVertex3d(nx,                     ny + bounds.size.height, nz);
+        glTexCoord2d(0.0f, 0.0f);       // lower left
+        glVertex3d(nx,                     ny,                      nz);
+        glTexCoord2d(1.0f, 0.0f);       // lower right
+        glVertex3d(nx + bounds.size.width, ny,                      nz);
     glEnd();
     
     glFlush();
