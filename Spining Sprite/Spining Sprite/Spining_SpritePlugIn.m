@@ -271,12 +271,9 @@ static NSArray * blendOptions;
     CGLContextObj cgl_ctx = [context CGLContextObj];
     
     // move the image to the center
-    GLdouble seconds = [self getElaspedSeconds];
-    
-    NSRect   bounds = [context bounds];
-
     glTranslated(_xAnchor, _yAnchor, 0.0f);
 
+    GLdouble seconds = [self getElaspedSeconds];
     GLdouble     ax = (self.inputXSpeed * seconds) + (self.inputXAccel * pow(seconds, 2));
     GLdouble     ay = (self.inputYSpeed * seconds) + (self.inputYAccel * pow(seconds, 2));
     GLdouble     az = (self.inputZSpeed * seconds) + (self.inputZAccel * pow(seconds, 2));
@@ -296,6 +293,7 @@ static NSArray * blendOptions;
     vec_z = cos(rad_x) * cos(rad_y);
     glRotated(az, vec_x, vec_y, vec_z);
 
+    NSRect bounds = [context bounds];
     glTranslated(bounds.origin.x - _xAnchor, bounds.origin.y - _yAnchor, 0.0f);
 
     // Render the textured quad by mapping the texture coordinates to the vertices

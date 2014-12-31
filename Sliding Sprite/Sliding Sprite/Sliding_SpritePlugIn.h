@@ -14,6 +14,14 @@ typedef struct
     GLdouble x;
     GLdouble y;
     GLdouble z;
+}
+SSProgress;
+
+typedef struct
+{
+    GLdouble x;
+    GLdouble y;
+    GLdouble z;
     BOOL     is;
 }
 SSDistance;
@@ -56,16 +64,35 @@ enum BlendMode {
     NumOfBlendMode
 };
 
-// ジャンプの動き
-#define JUMP_ARC                @"ぴょんぴょん"
-#define JUMP_WALK               @"歩くように"
-#define JUMP_QUAD               @"かくんかくん"
+#define OPT_NAME_CONSTANT       @"等速"
+#define OPT_NAME_ACCELARATE     @"加速"
+#define OPT_NAME_DECELARATE     @"減速"
 
-enum JumpBehavir {
-    ClrJumpBehavior_Arc = 0,
-    ClrJumpBehavior_Walk,
-    ClrJumpBehavior_Quad,
-    NumOfJumpBehavor
+enum SlideOpt {
+    Slide_Constant = 0,         // 等速
+    Slide_Accelarate,           // 加速
+    Slide_Decelarate,           // 減速
+    NumOfSlideOpt
+};
+
+#define FADE_NAME_CONST         @"一定"
+#define FADE_NAME_LOG           @"対数的"
+#define FADE_NAME_EXP           @"指数的"
+
+enum FadeOpt {
+    Fade_Constant = 0,          // 一定
+    Fade_Log,                   // 対数的
+    Fade_Exp,                   // 指数的
+    NumOfFadeOpt
+};
+
+#define JUMP_NAME_ARC           @"ぴょんぴょん"
+#define JUMP_NAME_MIRROR        @"コツコツ"
+
+enum JumpOpt {
+    Jump_Arc = 0,
+    Jump_Mirror,
+    NumOfJumpOpt
 };
 
 // キー値、名称、デフォルト値
@@ -80,13 +107,18 @@ enum JumpBehavir {
 #define PKEY_INPUTZPOSEND       @"inputZPosEnd"
 #define PKEY_INPUTSTARTTIME     @"inputStartTime"
 #define PKEY_INPUTENDTIME       @"inputEndTime"
+#define PKEY_INPUTXOPTION       @"inputXOption"
+#define PKEY_INPUTYOPTION       @"inputYOption"
+#define PKEY_INPUTZOPTION       @"inputZOption"
 #define PKEY_INPUTCOLOR1        @"inputColor1"
 #define PKEY_INPUTCOLOR2        @"inputColor2"
 #define PKEY_INPUTCOLOR3        @"inputColor3"
 #define PKEY_INPUTFADEINSTART   @"inputFadeInStart"
 #define PKEY_INPUTFADEINEND     @"inputFadeInEnd"
+#define PKEY_INPUTFADEINOPT     @"inputFadeInOpt"
 #define PKEY_INPUTFADEOUTSTART  @"inputFadeOutStart"
 #define PKEY_INPUTFADEOUTEND    @"inputFadeOutEnd"
+#define PKEY_INPUTFADEOUTOPT    @"inputFadeOutOpt"
 #define PKEY_INPUTXSCALESTART   @"inputXScaleStart"
 #define PKEY_INPUTYSCALESTART   @"inputYScaleStart"
 #define PKEY_INPUTZSCALESTART   @"inputZScaleStart"
@@ -101,7 +133,7 @@ enum JumpBehavir {
 #define PKEY_INPUTZLEAD         @"inputZLead"
 #define PKEY_INPUTJUMPSTARTTIME @"inputJumpStartTime"
 #define PKEY_INPUTJUMPENDTIME   @"inputJumpEndTime"
-#define PKEY_INPUTBEHAVIOR      @"inputBehavior"
+#define PKEY_INPUTJUMPOPT       @"inputJumpStyle"
 #define PKEY_INPUTXAXIS         @"inputXAxis"
 #define PKEY_INPUTYAXIS         @"inputYAxis"
 #define PKEY_INPUTZAXIS         @"inputZAxis"
@@ -130,13 +162,18 @@ enum JumpBehavir {
 #define PNAME_INPUTZPOSEND      @"Z End Pos"
 #define PNAME_INPUTSTARTTIME    @"Start Time"
 #define PNAME_INPUTENDTIME      @"End Time"
+#define PNAME_INPUTXOPTION      @"X Option"
+#define PNAME_INPUTYOPTION      @"Y Option"
+#define PNAME_INPUTZOPTION      @"Z Option"
 #define PNAME_INPUTCOLOR1       @"Color #1"
 #define PNAME_INPUTCOLOR2       @"Color #2"
 #define PNAME_INPUTCOLOR3       @"Color #3"
 #define PNAME_INPUTFADEINSTART  @"Fade In Start"
 #define PNAME_INPUTFADEINEND    @"Fade In End"
+#define PNAME_INPUTFADEINOPT    @"Fade In Opt"
 #define PNAME_INPUTFADEOUTSTART @"Fade Out Start"
 #define PNAME_INPUTFADEOUTEND   @"Fade Out End"
+#define PNAME_INPUTFADEOUTOPT   @"Fade Out Opt"
 #define PNAME_INPUTXSCALESTART  @"X Start Scale"
 #define PNAME_INPUTYSCALESTART  @"Y Start Scale"
 #define PNAME_INPUTZSCALESTART  @"Z Start Scale"
@@ -151,7 +188,7 @@ enum JumpBehavir {
 #define PNAME_INPUTZLEAD        @"Z Lead"
 #define PNAME_INPUTJUMPSTARTTIME @"Jump Start"
 #define PNAME_INPUTJUMPENDTIME   @"Jump End"
-#define PNAME_INPUTBEHAVIOR      @"Jump Style"
+#define PNAME_INPUTJUMPOPT      @"Jump Style"
 #define PNAME_INPUTXAXIS        @"X Axis"
 #define PNAME_INPUTYAXIS        @"Y Axis"
 #define PNAME_INPUTZAXIS        @"Z Axis"
@@ -174,6 +211,8 @@ enum JumpBehavir {
 #define PDEF_INPUTXPOSITION   0.0f
 #define PDEF_INPUTYPOSITION   0.0f
 #define PDEF_INPUTZPOSITION   0.0f
+#define PDEF_INPUTOPTION      Slide_Constant
+#define PMAX_INPUTOPTION      (NumOfSlideOpt - 1)
 #define PDEF_INPUTXAXIS       0.0f
 #define PDEF_INPUTYAXIS       0.0f
 #define PDEF_INPUTZAXIS       0.0f
@@ -185,6 +224,10 @@ enum JumpBehavir {
 #define PDEF_INPUTZSCALE      100.0f
 #define PMIN_INPUTSCALE       0.0f
 #define PDEF_INPUTCOLOR       CGColorCreateGenericRGB(1.0f, 1.0f, 1.0f, 1.0f)
+#define PDEF_INPUTFADEOPT     Fade_Constant
+#define PMAX_INPUTFADEOPT     (NumOfFadeOpt - 1)
+#define PDEF_INPUTJUMPOPT     Jump_Arc
+#define PMAX_INPUTJUMPOPT     (NumOfJumpOpt - 1)
 #define PDEF_INPUTBLENDMOD    ClrBlendMode_Over
 #define PMAX_INPUTBLENDMOD    (NumOfBlendMode - 1)
 #define PMIN_INPUTXAXIS       -180.0f
@@ -200,8 +243,6 @@ enum JumpBehavir {
 #define PDEF_INPUTLEAD        0.0f
 #define PDEF_INPUTTIME        0.0f
 #define PDEF_INPUTSETIME      0
-#define PDEF_INPUTBEHAVIOR    0
-#define PMAX_INPUTBEHAVIOR    (NumOfJumpBehavor - 1)
 
 @interface Sliding_SpritePlugIn : QCPlugIn
 
@@ -210,11 +251,14 @@ enum JumpBehavir {
 @property (assign) double     inputAnchorX;
 @property (assign) double     inputAnchorY;
 @property (assign) double     inputXPosStart;
-@property (assign) double     inputYPosStart;
-@property (assign) double     inputZPosStart;
 @property (assign) double     inputXPosEnd;
+@property (assign) NSUInteger inputXOption;
+@property (assign) double     inputYPosStart;
 @property (assign) double     inputYPosEnd;
+@property (assign) NSUInteger inputYOption;
+@property (assign) double     inputZPosStart;
 @property (assign) double     inputZPosEnd;
+@property (assign) NSUInteger inputZOption;
 @property (assign) NSUInteger inputStartTime;
 @property (assign) NSUInteger inputEndTime;
 @property (assign) CGColorRef inputColor1;
@@ -222,13 +266,15 @@ enum JumpBehavir {
 @property (assign) CGColorRef inputColor3;
 @property (assign) NSUInteger inputFadeInStart;
 @property (assign) NSUInteger inputFadeInEnd;
+@property (assign) NSUInteger inputFadeInOpt;
 @property (assign) NSUInteger inputFadeOutStart;
 @property (assign) NSUInteger inputFadeOutEnd;
+@property (assign) NSUInteger inputFadeOutOpt;
 @property (assign) double     inputXScaleStart;
-@property (assign) double     inputYScaleStart;
-@property (assign) double     inputZScaleStart;
 @property (assign) double     inputXScaleEnd;
+@property (assign) double     inputYScaleStart;
 @property (assign) double     inputYScaleEnd;
+@property (assign) double     inputZScaleStart;
 @property (assign) double     inputZScaleEnd;
 @property (assign) NSUInteger inputScaleStartTime;
 @property (assign) NSUInteger inputScaleEndTime;
@@ -238,18 +284,18 @@ enum JumpBehavir {
 @property (assign) double     inputZLead;
 @property (assign) NSUInteger inputJumpStartTime;
 @property (assign) NSUInteger inputJumpEndTime;
-@property (assign) NSUInteger inputBehavior;
+@property (assign) NSUInteger inputJumpStyle;
 @property (assign) double     inputXAxis;
 @property (assign) double     inputYAxis;
 @property (assign) double     inputZAxis;
 @property (assign) double     inputXAngleStart;
-@property (assign) double     inputYAngleStart;
-@property (assign) double     inputZAngleStart;
 @property (assign) BOOL       inputIsXSpin;
-@property (assign) BOOL       inputIsYSpin;
-@property (assign) BOOL       inputIsZSpin;
 @property (assign) double     inputXAngleEnd;
+@property (assign) double     inputYAngleStart;
+@property (assign) BOOL       inputIsYSpin;
 @property (assign) double     inputYAngleEnd;
+@property (assign) double     inputZAngleStart;
+@property (assign) BOOL       inputIsZSpin;
 @property (assign) double     inputZAngleEnd;
 @property (assign) NSUInteger inputSpinStartTime;
 @property (assign) NSUInteger inputSpinEndTime;
@@ -285,5 +331,6 @@ enum JumpBehavir {
 @property (assign) CGFloat    Blue2;
 @property (assign) CGFloat    Alpha2;
 @property (assign) NSTimeInterval JumpDuration;
+@property (assign) NSTimeInterval JumpDuration2;
 
 @end

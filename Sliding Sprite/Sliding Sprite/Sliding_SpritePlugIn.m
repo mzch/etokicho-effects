@@ -17,6 +17,8 @@
 #define	kQCPlugIn_Description		@"Slide in/out, scale and spin a specified image on the screen."
 
 static NSArray * blendOptions;
+static NSArray * slideOptions;
+static NSArray * fadeOptions;
 static NSArray * jumpOptions;
 
 @implementation Sliding_SpritePlugIn
@@ -32,13 +34,18 @@ static NSArray * jumpOptions;
 @dynamic inputZPosEnd;
 @dynamic inputStartTime;
 @dynamic inputEndTime;
+@dynamic inputXOption;
+@dynamic inputYOption;
+@dynamic inputZOption;
 @dynamic inputColor1;
 @dynamic inputColor2;
 @dynamic inputColor3;
 @dynamic inputFadeInStart;
 @dynamic inputFadeInEnd;
+@dynamic inputFadeInOpt;
 @dynamic inputFadeOutStart;
 @dynamic inputFadeOutEnd;
+@dynamic inputFadeOutOpt;
 @dynamic inputXScaleStart;
 @dynamic inputYScaleStart;
 @dynamic inputZScaleStart;
@@ -53,7 +60,7 @@ static NSArray * jumpOptions;
 @dynamic inputZLead;
 @dynamic inputJumpStartTime;
 @dynamic inputJumpEndTime;
-@dynamic inputBehavior;
+@dynamic inputJumpStyle;
 @dynamic inputXAxis;
 @dynamic inputYAxis;
 @dynamic inputZAxis;
@@ -140,6 +147,34 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
+    slideOptions = [NSArray arrayWithObjects:OPT_NAME_CONSTANT, OPT_NAME_ACCELARATE, OPT_NAME_DECELARATE, nil];
+    if ([key isEqualToString:PKEY_INPUTXOPTION])
+    {
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTXOPTION, QCPortAttributeNameKey,
+                slideOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTOPTION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTOPTION], QCPortAttributeMaximumValueKey,
+                nil];
+    }
+    if ([key isEqualToString:PKEY_INPUTYOPTION])
+    {
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTYOPTION, QCPortAttributeNameKey,
+                slideOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTOPTION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTOPTION], QCPortAttributeMaximumValueKey,
+                nil];
+    }
+    if ([key isEqualToString:PKEY_INPUTZOPTION])
+    {
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTZOPTION, QCPortAttributeNameKey,
+                slideOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTOPTION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTOPTION], QCPortAttributeMaximumValueKey,
+                nil];
+    }
     if ([key isEqualToString:PKEY_INPUTCOLOR1])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTCOLOR1, QCPortAttributeNameKey,
@@ -167,6 +202,16 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
+    fadeOptions = [NSArray arrayWithObjects:FADE_NAME_CONST, FADE_NAME_LOG, FADE_NAME_EXP, nil];
+    if ([key isEqualToString:PKEY_INPUTFADEINOPT])
+    {
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTFADEINOPT, QCPortAttributeNameKey,
+                fadeOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTFADEOPT], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTFADEOPT], QCPortAttributeMaximumValueKey,
+                nil];
+    }
     if ([key isEqualToString:PKEY_INPUTFADEOUTSTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTFADEOUTSTART, QCPortAttributeNameKey,
@@ -179,6 +224,15 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
+    if ([key isEqualToString:PKEY_INPUTFADEOUTOPT])
+    {
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTFADEOUTOPT, QCPortAttributeNameKey,
+                fadeOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTFADEOPT], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTFADEOPT], QCPortAttributeMaximumValueKey,
+                nil];
+    }
     if ([key isEqualToString:PKEY_INPUTXSCALESTART])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTXSCALESTART, QCPortAttributeNameKey,
@@ -260,14 +314,14 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTBEHAVIOR])
+    jumpOptions = [NSArray arrayWithObjects:JUMP_NAME_ARC, JUMP_NAME_MIRROR, nil];
+    if ([key isEqualToString:PKEY_INPUTJUMPOPT])
     {
-        jumpOptions = [NSArray arrayWithObjects:JUMP_ARC, JUMP_WALK, JUMP_QUAD, nil];
         return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTBEHAVIOR, QCPortAttributeNameKey,
+                PNAME_INPUTJUMPOPT, QCPortAttributeNameKey,
                 jumpOptions, QCPortAttributeMenuItemsKey,
-                [NSNumber numberWithUnsignedInteger:PDEF_INPUTBEHAVIOR], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithUnsignedInteger:PMAX_INPUTBEHAVIOR], QCPortAttributeMaximumValueKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTJUMPOPT], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTJUMPOPT], QCPortAttributeMaximumValueKey,
                 nil];
     }
     if ([key isEqualToString:PKEY_INPUTXAXIS])
@@ -498,34 +552,70 @@ static NSArray * jumpOptions;
         _Z_rotation = self.inputZAngleEnd - self.inputZAngleStart;
     
     if (self.inputJumpEndTime > self.inputJumpStartTime && self.inputBounce > 0)
-        _JumpDuration = (NSTimeInterval)(self.inputJumpEndTime - self.inputJumpStartTime) / (NSTimeInterval)self.inputBounce;
+    {
+        _JumpDuration  = (NSTimeInterval)(self.inputJumpEndTime - self.inputJumpStartTime) / (NSTimeInterval)self.inputBounce;
+    }
     else
+    {
         _JumpDuration = 0.0f;
+    }
+    _JumpDuration2 = _JumpDuration / 2.0f;
     
     return YES;
 }
 
-- (GLdouble) getSlideProgress
+- (SSProgress) getSlideProgress
 {
     NSTimeInterval StartTime   = (NSTimeInterval) self.inputStartTime;
     NSTimeInterval EndTime     = (NSTimeInterval) self.inputEndTime;
     NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
-    GLdouble progress = 0.0f;
+    SSProgress progress = {0.0f, 0.0f, 0.0f};
     
     if (EndTime > StartTime)
     {
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
-            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
+            GLdouble t   = CurrentTime - StartTime;
+            GLdouble max = EndTime - StartTime;
+            switch (self.inputXOption) {
+                case Slide_Accelarate:
+                    progress.x = ((t + 1) * t / 2.0) / ((max + 1) * max / 2.0);
+                    break;
+                case Slide_Decelarate:
+                    progress.x = ((max * 2 - t + 1) * t / 2.0) / ((max + 1) * max / 2.0);
+                    break;
+                default:
+                    progress.x = t / max;
+                    break;
+            }
+            switch (self.inputYOption) {
+                case Slide_Accelarate:
+                    progress.y = ((t + 1) * t / 2.0) / ((max + 1) * max / 2.0);
+                    break;
+                case Slide_Decelarate:
+                    progress.y = ((max * 2 - t + 1) * t / 2.0) / ((max + 1) * max / 2.0);
+                    break;
+                default:
+                    progress.y = t / max;
+                    break;
+            }
+            switch (self.inputZOption) {
+                case Slide_Accelarate:
+                    progress.z = ((t + 1) * t / 2.0) / ((max + 1) * max / 2.0);
+                    break;
+                case Slide_Decelarate:
+                    progress.z = ((max * 2 - t + 1) * t / 2.0) / ((max + 1) * max / 2.0);
+                    break;
+                default:
+                    progress.z = t / max;
+                    break;
+            }
         }
         else
         {
-            progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
+            GLdouble p = (CurrentTime > EndTime) ? 1.0f : 0.0f;
+            progress.x = progress.y = progress.z = p;
         }
-    }
-    else
-    {
-        progress = 0.0f;
     }
     return progress;
 }
@@ -541,16 +631,24 @@ static NSArray * jumpOptions;
     {
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
-            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
+            GLdouble t = (CurrentTime - StartTime) / (EndTime - StartTime);
+            switch (self.inputFadeInOpt) {
+                case Fade_Log:
+                    progress = log(1.0f + t) * 2.0f;
+                    progress = progress < 0.0f ? 0.0f : progress;
+                    break;
+                case Fade_Exp:
+                    progress = exp(t) - 1.0f;
+                    break;
+                default:
+                    progress = t;
+                    break;
+            }
         }
         else
         {
             progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
         }
-    }
-    else
-    {
-        progress = 0.0f;
     }
     return progress;
 }
@@ -566,16 +664,24 @@ static NSArray * jumpOptions;
     {
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
-            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
+            GLdouble t = (CurrentTime - StartTime) / (EndTime - StartTime);
+            switch (self.inputFadeInOpt) {
+                case Fade_Log:
+                    progress = log(1.0f + t) * 2.0f;
+                    progress = progress < 0.0f ? 0.0f : progress;
+                    break;
+                case Fade_Exp:
+                    progress = exp(t) - 1.0f;
+                    break;
+                default:
+                    progress = t;
+                    break;
+            }
         }
         else
         {
             progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
         }
-    }
-    else
-    {
-        progress = 0.0f;
     }
     return progress;
 }
@@ -598,10 +704,6 @@ static NSArray * jumpOptions;
             progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
         }
     }
-    else
-    {
-        progress = 0.0f;
-    }
     return progress;
 }
 
@@ -623,10 +725,6 @@ static NSArray * jumpOptions;
             progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
         }
     }
-    else
-    {
-        progress = 0.0f;
-    }
     return progress;
 }
 
@@ -637,36 +735,25 @@ static NSArray * jumpOptions;
     NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
     SSDistance jump = {0.0f, 0.0f, 0.0f};
     
-    if (EndTime > StartTime)
+    if ((EndTime > StartTime) &&  (_JumpDuration > 0.0f))
     {
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
-            if (_JumpDuration > 0.0f)
-            {
-                NSTimeInterval quotient = (CurrentTime - StartTime) / _JumpDuration;
-                NSTimeInterval JumpCounter = floor(quotient);
-                double JumpRadian = (CurrentTime - StartTime - (JumpCounter * _JumpDuration)) / _JumpDuration;
-                
-                switch (self.inputBehavior)
-                {
-                    case ClrJumpBehavior_Quad:
-                        jump.x = pow(JumpRadian, 2) * _xLeads;
-                        jump.y = pow(JumpRadian, 2) * _yLeads;
-                        jump.z = pow(JumpRadian, 2) * _zLeads;
-                        break;
-                    case ClrJumpBehavior_Walk:
-                        jump.x = log(JumpRadian + 1.0f) * _xLeads;
-                        jump.y = log(JumpRadian + 1.0f) * _yLeads;
-                        jump.z = log(JumpRadian + 1.0f) * _zLeads;
-                        break;
-                    case ClrJumpBehavior_Arc:
-                    default:
-                        JumpRadian *= M_PI;
-                        jump.x = sin(JumpRadian) * _xLeads;
-                        jump.y = sin(JumpRadian) * _yLeads;
-                        jump.z = sin(JumpRadian) * _zLeads;
-                        break;
-                }
+            double JumpRadian = fmod((NSTimeInterval)(CurrentTime - StartTime) / _JumpDuration, 1.0f);
+            double JumpRad2   = JumpRadian - (_JumpDuration2 / _JumpDuration);
+           switch (self.inputJumpStyle) {
+                case Jump_Mirror:
+                   JumpRad2 = JumpRad2 < 0.0f ? JumpRadian : fabs(JumpRad2 - (_JumpDuration2 / _JumpDuration));
+                    jump.x = JumpRad2 * _xLeads;
+                    jump.y = JumpRad2 * _yLeads;
+                    jump.z = JumpRad2 * _zLeads;
+                    break;
+                default:
+                    JumpRadian *= M_PI;
+                    jump.x = sin(JumpRadian) * _xLeads;
+                    jump.y = sin(JumpRadian) * _yLeads;
+                    jump.z = sin(JumpRadian) * _zLeads;
+                    break;
             }
         }
     }
@@ -679,10 +766,10 @@ static NSArray * jumpOptions;
     CGLContextObj cgl_ctx = [context CGLContextObj];
     
     // move the image to the center
-    GLdouble progress = [self getSlideProgress];
+    SSProgress progress = [self getSlideProgress];
     NSRect bounds = [context bounds];
-    GLdouble x = _xPosStart + (_X_distance * progress);
-    GLdouble y = _yPosStart + (_Y_distance * progress);
+    GLdouble x = _xPosStart + (_X_distance * progress.x);
+    GLdouble y = _yPosStart + (_Y_distance * progress.y);
     glTranslated(x, y, 0.0f);
     
     // Rotate the matrix
@@ -757,9 +844,9 @@ static NSArray * jumpOptions;
     glColor4f(red, green, blue, alpha);
     // New Position
     SSDistance jump = [self getJumpLead];
-    GLdouble     nx = (bounds.origin.x + _xPosStart - _xAnchor + (_X_distance * progress) + jump.x);
-    GLdouble     ny = (bounds.origin.y + _yPosStart - _yAnchor + (_Y_distance * progress) + jump.y);
-    GLdouble     nz = (_zPosStart + (_Z_distance * progress) + jump.z);
+    GLdouble     nx = (bounds.origin.x + _xPosStart - _xAnchor + (_X_distance * progress.x) + jump.x);
+    GLdouble     ny = (bounds.origin.y + _yPosStart - _yAnchor + (_Y_distance * progress.y) + jump.y);
+    GLdouble     nz = (_zPosStart + (_Z_distance * progress.z) + jump.z);
     
     // Render the textured quad by mapping the texture coordinates to the vertices
     glBegin(GL_QUADS);
