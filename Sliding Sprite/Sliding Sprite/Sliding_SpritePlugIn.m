@@ -314,7 +314,7 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
-    jumpOptions = [NSArray arrayWithObjects:JUMP_NAME_ARC, JUMP_NAME_MIRROR, nil];
+    jumpOptions = [NSArray arrayWithObjects:JUMP_NAME_ARC, JUMP_NAME_MIRROR, JUMP_NAME_QUAD, JUMP_NAME_FLIGHT, nil];
     if ([key isEqualToString:PKEY_INPUTJUMPOPT])
     {
         return [NSDictionary dictionaryWithObjectsAndKeys:
@@ -740,13 +740,24 @@ static NSArray * jumpOptions;
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
             double JumpRadian = fmod((NSTimeInterval)(CurrentTime - StartTime) / _JumpDuration, 1.0f);
-            double JumpRad2   = JumpRadian - (_JumpDuration2 / _JumpDuration);
-           switch (self.inputJumpStyle) {
+            double JumpRad2   = (JumpRadian - (_JumpDuration2 / _JumpDuration));
+            JumpRad2  = JumpRad2 < 0.0f ? JumpRadian : fabs(JumpRad2 - (_JumpDuration2 / _JumpDuration));
+            JumpRad2 *= _JumpDuration / _JumpDuration2;
+            switch (self.inputJumpStyle) {
                 case Jump_Mirror:
-                   JumpRad2 = JumpRad2 < 0.0f ? JumpRadian : fabs(JumpRad2 - (_JumpDuration2 / _JumpDuration));
                     jump.x = JumpRad2 * _xLeads;
                     jump.y = JumpRad2 * _yLeads;
                     jump.z = JumpRad2 * _zLeads;
+                    break;
+                case Jump_Quad:
+                    jump.x = pow(JumpRad2, 3) * _xLeads;
+                    jump.y = pow(JumpRad2, 3) * _yLeads;
+                    jump.z = pow(JumpRad2, 3) * _zLeads;
+                   break;
+                case Jump_Flight:
+                    jump.x = (1.0f + (-1.0f * pow(1.0f - JumpRad2, 3))) * _xLeads;
+                    jump.y = (1.0f + (-1.0f * pow(1.0f - JumpRad2, 3))) * _yLeads;
+                    jump.z = (1.0f + (-1.0f * pow(1.0f - JumpRad2, 3))) * _zLeads;
                     break;
                 default:
                     JumpRadian *= M_PI;

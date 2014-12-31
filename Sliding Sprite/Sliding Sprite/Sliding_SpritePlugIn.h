@@ -88,10 +88,14 @@ enum FadeOpt {
 
 #define JUMP_NAME_ARC           @"ぴょんぴょん"
 #define JUMP_NAME_MIRROR        @"コツコツ"
+#define JUMP_NAME_QUAD          @"タメあり"
+#define JUMP_NAME_FLIGHT        @"逆タメあり"
 
 enum JumpOpt {
     Jump_Arc = 0,
     Jump_Mirror,
+    Jump_Quad,
+    Jump_Flight,
     NumOfJumpOpt
 };
 
