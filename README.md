@@ -29,6 +29,7 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 ```Ultra Q.qtz```| ```~/Library/Compositions/```
 ```Pixels To Units Coordinate.qtz```| ```~/Library/Graphics/Quartz Composer Patches```
 ```AnchoredSprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
+```Bounce.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Burst.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Sliding Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Spining Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
