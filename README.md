@@ -24,7 +24,7 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 ```Particle System.qtz```| ```~/Library/Compositions/```
 ```Shake.qtz```| ```~/Library/Compositions/```
 ```Slide.qtz```| ```~/Library/Compositions/```
-```Spin.qt```z| ```~/Library/Compositions/```
+```Spin.qtz```| ```~/Library/Compositions/```
 ```Spot Light.qtz```| ```~/Library/Compositions/```
 ```Ultra Q.qtz```| ```~/Library/Compositions/```
 ```Pixels To Units Coordinate.qtz```| ```~/Library/Graphics/Quartz Composer Patches```
