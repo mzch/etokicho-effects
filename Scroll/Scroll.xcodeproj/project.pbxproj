@@ -1,0 +1,274 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A4717C8C1A5577E200439358 /* ScrollPlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = A4717C8B1A5577E200439358 /* ScrollPlugIn.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A4717C851A5577E200439358 /* Scroll.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Scroll.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4717C891A5577E200439358 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A4717C8A1A5577E200439358 /* ScrollPlugIn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollPlugIn.h; sourceTree = "<group>"; };
+		A4717C8B1A5577E200439358 /* ScrollPlugIn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrollPlugIn.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4717C811A5577E200439358 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A4717C7B1A5577E200439358 = {
+			isa = PBXGroup;
+			children = (
+				A4717C871A5577E200439358 /* Scroll */,
+				A4717C861A5577E200439358 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A4717C861A5577E200439358 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A4717C851A5577E200439358 /* Scroll.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A4717C871A5577E200439358 /* Scroll */ = {
+			isa = PBXGroup;
+			children = (
+				A4717C8A1A5577E200439358 /* ScrollPlugIn.h */,
+				A4717C8B1A5577E200439358 /* ScrollPlugIn.m */,
+				A4717C881A5577E200439358 /* Supporting Files */,
+			);
+			path = Scroll;
+			sourceTree = "<group>";
+		};
+		A4717C881A5577E200439358 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A4717C891A5577E200439358 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A4717C841A5577E200439358 /* Scroll */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A4717C8F1A5577E200439358 /* Build configuration list for PBXNativeTarget "Scroll" */;
+			buildPhases = (
+				A4717C801A5577E200439358 /* Sources */,
+				A4717C811A5577E200439358 /* Frameworks */,
+				A4717C821A5577E200439358 /* Resources */,
+				A4717C831A5577E200439358 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Scroll;
+			productName = Scroll;
+			productReference = A4717C851A5577E200439358 /* Scroll.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A4717C7C1A5577E200439358 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Koichi MATSUMOTO";
+				TargetAttributes = {
+					A4717C841A5577E200439358 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = A4717C7F1A5577E200439358 /* Build configuration list for PBXProject "Scroll" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A4717C7B1A5577E200439358;
+			productRefGroup = A4717C861A5577E200439358 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A4717C841A5577E200439358 /* Scroll */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A4717C821A5577E200439358 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A4717C831A5577E200439358 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This shell script simply copies the built plug-in to \"~/Library/Graphics/Quartz Composer Plug-Ins\" and overrides any previous version at that location\n\nmkdir -p \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins\"\nrm -rf \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/Scroll.plugin\"\ncp -rf \"$BUILT_PRODUCTS_DIR/Scroll.plugin\" \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A4717C801A5577E200439358 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A4717C8C1A5577E200439358 /* ScrollPlugIn.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A4717C8D1A5577E200439358 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A4717C8E1A5577E200439358 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A4717C901A5577E200439358 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Scroll/Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		A4717C911A5577E200439358 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Scroll/Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A4717C7F1A5577E200439358 /* Build configuration list for PBXProject "Scroll" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4717C8D1A5577E200439358 /* Debug */,
+				A4717C8E1A5577E200439358 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A4717C8F1A5577E200439358 /* Build configuration list for PBXNativeTarget "Scroll" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A4717C901A5577E200439358 /* Debug */,
+				A4717C911A5577E200439358 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A4717C7C1A5577E200439358 /* Project object */;
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>5DF1A8F1-47C8-4E1D-9CF3-9B36DB31A040</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Scroll</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>FF1769E8931063FAD5C115F3BBAC6061FBAAB4E1</key>
+		<string>https://github.com/mzch/etokicho-effects.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Scroll/Scroll.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>FF1769E8931063FAD5C115F3BBAC6061FBAAB4E1</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/mzch/etokicho-effects.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>FF1769E8931063FAD5C115F3BBAC6061FBAAB4E1</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>FF1769E8931063FAD5C115F3BBAC6061FBAAB4E1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>etokicho-effects</string>
+		</dict>
+	</array>
+</dict>
+</plist>

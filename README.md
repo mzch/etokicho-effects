@@ -22,6 +22,7 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 * ```Move.qtz```| ```~/Library/Compositions/```
 ```Page Curl.qtz```| ```~/Library/Compositions/```
 ```Particle System.qtz```| ```~/Library/Compositions/```
+```Scroll.qtz```| ```~/Library/Compositions/```
 ```Shake.qtz```| ```~/Library/Compositions/```
 ```Slide.qtz```| ```~/Library/Compositions/```
 ```Spin.qtz```| ```~/Library/Compositions/```
@@ -32,6 +33,7 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 ```Bounce.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Burst.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Fade.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
+```Scroll.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Sliding Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Spining Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```TimerSwitch.plugin```|```~/Library/Graphics/Quartz Composer Plug-ins```
@@ -58,3 +60,4 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 2014/11/23 Bounce.qtz 追加    
 2014/12/18 Slide.qtz および SlidingSprite.plugin 追加    
 2014/12/21 Burst.qtz および Burst.plugin 追加    
+2015/01/01 Scroll.qtz および Scroll.plugin 追加    
