@@ -31,6 +31,7 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 ```AnchoredSprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Bounce.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Burst.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
+```Fade.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Sliding Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Spining Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```TimerSwitch.plugin```|```~/Library/Graphics/Quartz Composer Plug-ins```

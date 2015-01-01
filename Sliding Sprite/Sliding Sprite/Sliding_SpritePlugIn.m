@@ -665,7 +665,7 @@ static NSArray * jumpOptions;
         if (CurrentTime >= StartTime && CurrentTime <= EndTime)
         {
             GLdouble t = (CurrentTime - StartTime) / (EndTime - StartTime);
-            switch (self.inputFadeInOpt) {
+            switch (self.inputFadeOutOpt) {
                 case Fade_Log:
                     progress = log(1.0f + t) * 2.0f;
                     progress = progress < 0.0f ? 0.0f : progress;
