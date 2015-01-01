@@ -127,7 +127,7 @@ static NSArray * fadeOptions;
 + (QCPlugInExecutionMode)executionMode
 {
 	// Return the execution mode of the plug-in: kQCPlugInExecutionModeProvider, kQCPlugInExecutionModeProcessor, or kQCPlugInExecutionModeConsumer.
-	return kQCPlugInExecutionModeProcessor;
+	return kQCPlugInExecutionModeConsumer;
 }
 
 + (QCPlugInTimeMode)timeMode
