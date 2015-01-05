@@ -28,6 +28,7 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 ```Spin.qtz```| ```~/Library/Compositions/```
 ```Spot Light.qtz```| ```~/Library/Compositions/```
 ```Ultra Q.qtz```| ```~/Library/Compositions/```
+```Walk.qtz```| ```~/Library/Compositions/```
 ```Pixels To Units Coordinate.qtz```| ```~/Library/Graphics/Quartz Composer Patches```
 ```AnchoredSprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Bounce.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
@@ -37,6 +38,7 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 ```Sliding Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```Spining Sprite.plugin```| ```~/Library/Graphics/Quartz Composer Plug-ins```
 ```TimerSwitch.plugin```|```~/Library/Graphics/Quartz Composer Plug-ins```
+```Walk.plugin```|```~/Library/Graphics/Quartz Composer Plug-ins```
 
 * それぞれの```*.plugin``` および、```Pixels To Units Coordinate.qtz``` は、エフェクト中で使用している Quick Composer プラグインです。必ず指定位置にコピーして下さい。
 * 新規に導入する場合、```Move.qtz```と```Move Image.qtz```は不要です。
@@ -61,3 +63,4 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 2014/12/18 Slide.qtz および SlidingSprite.plugin 追加    
 2014/12/21 Burst.qtz および Burst.plugin 追加    
 2015/01/01 Scroll.qtz および Scroll.plugin 追加    
+2015/01/06 Walk.qtz および Walk.plugin 追加    

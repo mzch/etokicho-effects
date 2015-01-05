@@ -1,9 +1,9 @@
 //
-//  Sliding_SpritePlugIn.m
-//  Sliding Sprite
+//  WalkPlugIn.m
+//  Walk
 //
-//  Created by Koichi MATSUMOTO on 2014/12/30.
-//  Copyright (c) 2014 Koichi MATSUMOTO. All rights reserved.
+//  Created by Koichi MATSUMOTO on 2015/01/05.
+//  Copyright (c) 2015 Koichi MATSUMOTO. All rights reserved.
 //
 
 // It's highly recommended to use CGL macros instead of changing the current context for plug-ins that perform OpenGL rendering
@@ -11,17 +11,17 @@
 #import <OpenGL/glu.h>
 #import <GLKit/GLKit.h>
 
-#import "Sliding_SpritePlugIn.h"
+#import "WalkPlugIn.h"
 
-#define	kQCPlugIn_Name				@"Sliding Sprite"
-#define	kQCPlugIn_Description		@"Slide in/out, scale and spin a specified image on the screen."
+#define	kQCPlugIn_Name				@"Walk"
+#define	kQCPlugIn_Description		@"This patch provide an image with walking-effect."
 
 static NSArray * blendOptions;
 static NSArray * slideOptions;
+static NSArray * swingOptions;
 static NSArray * fadeOptions;
-static NSArray * jumpOptions;
 
-@implementation Sliding_SpritePlugIn
+@implementation WalkPlugIn
 
 @dynamic inputImage;
 @dynamic inputAnchorX;
@@ -32,6 +32,11 @@ static NSArray * jumpOptions;
 @dynamic inputXPosEnd;
 @dynamic inputYPosEnd;
 @dynamic inputZPosEnd;
+@dynamic inputSwing;
+@dynamic inputRoll;
+@dynamic inputPitch;
+@dynamic inputDuration;
+@dynamic inputSwingOpt;
 @dynamic inputStartTime;
 @dynamic inputEndTime;
 @dynamic inputXOption;
@@ -54,27 +59,6 @@ static NSArray * jumpOptions;
 @dynamic inputZScaleEnd;
 @dynamic inputScaleStartTime;
 @dynamic inputScaleEndTime;
-@dynamic inputBounce;
-@dynamic inputXLead;
-@dynamic inputYLead;
-@dynamic inputZLead;
-@dynamic inputJumpStartTime;
-@dynamic inputJumpEndTime;
-@dynamic inputJumpStyle;
-@dynamic inputXAxis;
-@dynamic inputYAxis;
-@dynamic inputZAxis;
-@dynamic inputXAngleStart;
-@dynamic inputYAngleStart;
-@dynamic inputZAngleStart;
-@dynamic inputIsXSpin;
-@dynamic inputIsYSpin;
-@dynamic inputIsZSpin;
-@dynamic inputXAngleEnd;
-@dynamic inputYAngleEnd;
-@dynamic inputZAngleEnd;
-@dynamic inputSpinStartTime;
-@dynamic inputSpinEndTime;
 @dynamic inputTime;
 @dynamic inputBlendMode;
 
@@ -90,7 +74,6 @@ static NSArray * jumpOptions;
 + (NSDictionary *)attributesForPropertyPortWithKey:(NSString *)key
 {
 	// Specify the optional attributes for property based ports (QCPortAttributeNameKey, QCPortAttributeDefaultValueKey...).
-    // Specify the optional attributes for property based ports (QCPortAttributeNameKey, QCPortAttributeDefaultValueKey...).
     if ([key isEqualToString:PKEY_INPUTIMAGE])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTIMAGE, QCPortAttributeNameKey,
@@ -135,6 +118,31 @@ static NSArray * jumpOptions;
                 PNAME_INPUTZPOSEND, QCPortAttributeNameKey,
                 [NSNumber numberWithDouble:PDEF_INPUTZPOSITION], QCPortAttributeDefaultValueKey,
                 nil];
+    if ([key isEqualToString:PKEY_INPUTSWING])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTSWING, QCPortAttributeNameKey,
+                [NSNumber numberWithDouble:PDEF_INPUTSWING], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithDouble:PMIN_INPUTSWING], QCPortAttributeMinimumValueKey,
+                [NSNumber numberWithDouble:PMAX_INPUTSWING], QCPortAttributeMaximumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTROLL])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTROLL, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTROLL], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTROLL], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTPITCH])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTPITCH, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTPITCH], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PDEF_INPUTPITCH], QCPortAttributeMinimumValueKey,
+                nil];
+    if ([key isEqualToString:PKEY_INPUTDURATION])
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTDURATION, QCPortAttributeNameKey,
+                [NSNumber numberWithInteger:PDEF_INPUTDURATION], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithInteger:PMIN_INPUTDURATION], QCPortAttributeMinimumValueKey,
+                nil];
     if ([key isEqualToString:PKEY_INPUTSTARTTIME])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTSTARTTIME, QCPortAttributeNameKey,
@@ -173,6 +181,16 @@ static NSArray * jumpOptions;
                 slideOptions, QCPortAttributeMenuItemsKey,
                 [NSNumber numberWithUnsignedInteger:PDEF_INPUTOPTION], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithUnsignedInteger:PMAX_INPUTOPTION], QCPortAttributeMaximumValueKey,
+                nil];
+    }
+    swingOptions = [NSArray arrayWithObjects:SWING_NAME_NORMAL, SWING_NAME_HOP, SWING_NAME_RUNNING, SWING_NAME_SKIP, SWING_NAME_STAGGERED, nil];
+    if ([key isEqualToString:PKEY_INPUTSWINGOPT])
+    {
+        return [NSDictionary dictionaryWithObjectsAndKeys:
+                PNAME_INPUTSWINGOPT, QCPortAttributeNameKey,
+                swingOptions, QCPortAttributeMenuItemsKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTSWINGOPT], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTSWINGOPT], QCPortAttributeMaximumValueKey,
                 nil];
     }
     if ([key isEqualToString:PKEY_INPUTCOLOR1])
@@ -281,140 +299,19 @@ static NSArray * jumpOptions;
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
                 [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTBOUNCE])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTBOUNCE, QCPortAttributeNameKey,
-                [NSNumber numberWithInteger:PDEF_INPUTBOUNCE], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithInteger:PDEF_INPUTBOUNCE], QCPortAttributeMinimumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTXLEAD])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTXLEAD, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTYLEAD])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTYLEAD, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTZLEAD])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTZLEAD, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTLEAD], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTJUMPSTARTTIME])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTJUMPSTARTTIME, QCPortAttributeNameKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTJUMPENDTIME])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTJUMPENDTIME, QCPortAttributeNameKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
-                nil];
-    jumpOptions = [NSArray arrayWithObjects:JUMP_NAME_ARC, JUMP_NAME_MIRROR, JUMP_NAME_QUAD, JUMP_NAME_FLIGHT, nil];
-    if ([key isEqualToString:PKEY_INPUTJUMPOPT])
-    {
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTJUMPOPT, QCPortAttributeNameKey,
-                jumpOptions, QCPortAttributeMenuItemsKey,
-                [NSNumber numberWithUnsignedInteger:PDEF_INPUTJUMPOPT], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithUnsignedInteger:PMAX_INPUTJUMPOPT], QCPortAttributeMaximumValueKey,
-                nil];
-    }
-    if ([key isEqualToString:PKEY_INPUTXAXIS])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTXAXIS, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTXAXIS], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithDouble:PMIN_INPUTXAXIS], QCPortAttributeMinimumValueKey,
-                [NSNumber numberWithDouble:PMAX_INPUTXAXIS], QCPortAttributeMaximumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTYAXIS])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTYAXIS, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTYAXIS], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithDouble:PMIN_INPUTYAXIS], QCPortAttributeMinimumValueKey,
-                [NSNumber numberWithDouble:PMAX_INPUTYAXIS], QCPortAttributeMaximumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTZAXIS])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTZAXIS, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTZAXIS], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithDouble:PMIN_INPUTZAXIS], QCPortAttributeMinimumValueKey,
-                [NSNumber numberWithDouble:PMAX_INPUTZAXIS], QCPortAttributeMaximumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTXANGLESTART])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTXANGLESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTXANGLE], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTYANGLESTART])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTYANGLESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTYANGLE], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTZANGLESTART])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTZANGLESTART, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTZANGLE], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTISXSPIN])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTISXSPIN, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTISXSPIN], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTISYSPIN])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTISYSPIN, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTISYSPIN], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTISZSPIN])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTISZSPIN, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTISZSPIN], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTXANGLEEND])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTXANGLEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTXANGLE], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTYANGLEEND])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTYANGLEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTYANGLE], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTZANGLEEND])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTZANGLEEND, QCPortAttributeNameKey,
-                [NSNumber numberWithDouble:PDEF_INPUTZANGLE], QCPortAttributeDefaultValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTSPINSTARTTIME])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTSPINSTARTTIME, QCPortAttributeNameKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
-                nil];
-    if ([key isEqualToString:PKEY_INPUTSPINENDTIME])
-        return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTSPINENDTIME, QCPortAttributeNameKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithInteger:PDEF_INPUTSETIME], QCPortAttributeMinimumValueKey,
-                nil];
     if ([key isEqualToString:PKEY_INPUTTIME])
         return [NSDictionary dictionaryWithObjectsAndKeys:
                 PNAME_INPUTTIME, QCPortAttributeNameKey,
                 [NSNumber numberWithFloat:PDEF_INPUTTIME], QCPortAttributeDefaultValueKey,
                 nil];
-    if ([key isEqualToString:PKEY_INPUTBLENDMOD])
+    if ([key isEqualToString:PKEY_INPUTBLENDMODE])
     {
         blendOptions = [NSArray arrayWithObjects:BLEND_NAME_REPLACE, BLEND_NAME_OVER, BLEND_NAME_ADD, BLEND_NAME_ADDALPHA, BLEND_NAME_ALPHA, BLEND_NAME_MULTI,BLEND_NAME_INVERT, BLEND_NAME_SCREEN, BLEND_NAME_XOR, nil];
         return [NSDictionary dictionaryWithObjectsAndKeys:
-                PNAME_INPUTBLENDMOD, QCPortAttributeNameKey,
+                PNAME_INPUTBLENDMODE, QCPortAttributeNameKey,
                 blendOptions, QCPortAttributeMenuItemsKey,
-                [NSNumber numberWithUnsignedInteger:PDEF_INPUTBLENDMOD], QCPortAttributeDefaultValueKey,
-                [NSNumber numberWithUnsignedInteger:PMAX_INPUTBLENDMOD], QCPortAttributeMaximumValueKey,
+                [NSNumber numberWithUnsignedInteger:PDEF_INPUTBLENDMODE], QCPortAttributeDefaultValueKey,
+                [NSNumber numberWithUnsignedInteger:PMAX_INPUTBLENDMODE], QCPortAttributeMaximumValueKey,
                 nil];
     }
 	return nil;
@@ -445,7 +342,7 @@ static NSArray * jumpOptions;
 
 @end
 
-@implementation Sliding_SpritePlugIn (Execution)
+@implementation WalkPlugIn (Execution)
 
 - (void)setBlendFunc:(CGLContextObj) cgl_ctx
 {
@@ -482,20 +379,7 @@ static NSArray * jumpOptions;
     glEnable(GL_BLEND);
 }
 
-- (BOOL)startExecution:(id <QCPlugInContext>)context
-{
-	// Called by Quartz Composer when rendering of the composition starts: perform any required setup for the plug-in.
-	// Return NO in case of fatal failure (this will prevent rendering of the composition to start).
-	
-	return YES;
-}
-
-- (void)enableExecution:(id <QCPlugInContext>)context
-{
-	// Called by Quartz Composer when the plug-in instance starts being used by Quartz Composer.
-}
-
-- (BOOL)setupExecute:(id <QCPlugInContext>)context ScreenSpec:(NSRect)scspec
+- (void)setupExecute:(id <QCPlugInContext>)context ScreenSpec:(NSRect)scspec
 {
     NSRect bounds = [context bounds];
     
@@ -513,14 +397,15 @@ static NSArray * jumpOptions;
     _yPosEnd   = bounds.origin.y + (pixelHeight * self.inputYPosEnd);
     _zPosEnd   = (self.inputZPosEnd * pixelWidth);
     
-    _xLeads    = pixelWidth  * self.inputXLead;
-    _yLeads    = pixelHeight * self.inputYLead;
-    _zLeads    = pixelWidth  * self.inputZLead;
+    _Roll      = pixelWidth * self.inputRoll;
+    _Pitch     = pixelHeight * self.inputPitch;
     
-    // 変化量を求める
     _X_distance = _xPosEnd - _xPosStart;
     _Y_distance = _yPosEnd - _yPosStart;
     _Z_distance = _zPosEnd - _zPosStart;
+
+    _SwingStart  = self.inputSwing;
+    _SwingEnd    = self.inputSwing * (-1.0f);
     
     const CGFloat * color1 = CGColorGetComponents(self.inputColor1);
     const CGFloat * color2 = CGColorGetComponents(self.inputColor2);
@@ -537,31 +422,19 @@ static NSArray * jumpOptions;
     _X_scale = (self.inputXScaleEnd - self.inputXScaleStart) / PERCENTAGE;
     _Y_scale = (self.inputYScaleEnd - self.inputYScaleStart) / PERCENTAGE;
     _Z_scale = (self.inputZScaleEnd - self.inputZScaleStart) / PERCENTAGE;
-    
-    if (self.inputIsXSpin)
-        _X_rotation = self.inputXAngleEnd * 360.0f;
-    else
-        _X_rotation = self.inputXAngleEnd - self.inputXAngleStart;
-    if (self.inputIsYSpin)
-        _Y_rotation = self.inputYAngleEnd * 360.0f;
-    else
-        _Y_rotation = self.inputYAngleEnd - self.inputYAngleStart;
-    if (self.inputIsZSpin)
-        _Z_rotation = self.inputZAngleEnd * 360.0f;
-    else
-        _Z_rotation = self.inputZAngleEnd - self.inputZAngleStart;
-    
-    if (self.inputJumpEndTime > self.inputJumpStartTime && self.inputBounce > 0)
-    {
-        _JumpDuration  = (NSTimeInterval)(self.inputJumpEndTime - self.inputJumpStartTime) / (NSTimeInterval)self.inputBounce;
-    }
-    else
-    {
-        _JumpDuration = 0.0f;
-    }
-    _JumpDuration2 = _JumpDuration / 2.0f;
-    
-    return YES;
+}
+
+- (BOOL)startExecution:(id <QCPlugInContext>)context
+{
+	// Called by Quartz Composer when rendering of the composition starts: perform any required setup for the plug-in.
+	// Return NO in case of fatal failure (this will prevent rendering of the composition to start).
+	
+	return YES;
+}
+
+- (void)enableExecution:(id <QCPlugInContext>)context
+{
+	// Called by Quartz Composer when the plug-in instance starts being used by Quartz Composer.
 }
 
 - (SSProgress) getSlideProgress
@@ -615,6 +488,73 @@ static NSArray * jumpOptions;
         {
             GLdouble p = (CurrentTime > EndTime) ? 1.0f : 0.0f;
             progress.x = progress.y = progress.z = p;
+        }
+    }
+    return progress;
+}
+
+- (SSSwing) getSwingProgress
+{
+    NSTimeInterval StartTime   = (NSTimeInterval) self.inputStartTime;
+    NSTimeInterval EndTime     = (NSTimeInterval) self.inputEndTime;
+    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
+    SSSwing progress = {0.0f, 0.0f, 0.0f};
+    
+    if (self.inputDuration > 0 && EndTime > StartTime)
+    {
+        double dur  = fmod(((double)(CurrentTime - StartTime) / (double) self.inputDuration), 1.0f);
+        NSUInteger cur = (NSUInteger) CurrentTime - StartTime;
+        BOOL sign = (cur / self.inputDuration) % 2 ? YES : NO;
+
+        if (CurrentTime >= StartTime && CurrentTime <= EndTime)
+        {
+            if (sign)
+            {
+                progress.deg  = _SwingStart * sin(dur * M_PI);
+            }
+            else
+            {
+                progress.deg = _SwingEnd * sin(dur * M_PI);
+            }
+            switch (self.inputSwingOpt) {
+                case Swing_Staggered:
+                    if (progress.deg < 0.0f)
+                        progress.roll = _Roll * pow(sin(dur * M_PI), 3) * 2.0f;
+                    else
+                        progress.roll = _Roll * pow(sin(dur * M_PI), 3) * (-2.0f);
+                    progress.pitch = fabs(_Pitch * pow(sin(dur * M_PI), 3)) * (-2.0f);
+                    break;
+                case Swing_Skip:
+                    if (progress.deg < 0.0f)
+                        progress.roll = _Roll * sin(dur * M_PI);
+                    else
+                        progress.roll = _Roll * sin(dur * M_PI) * (-1.0f);
+                    progress.pitch = fabs(_Pitch * sin(dur * M_PI));
+                    progress.deg = 0.0f;
+                    break;
+                case Swing_Running:
+                    if (progress.deg < 0.0f)
+                        progress.roll = _Roll * sin(dur * M_PI);
+                    else
+                        progress.roll = _Roll * sin(dur * M_PI) * (-1.0f);
+                    progress.pitch = fabs(_Pitch * sin(dur * M_PI)) * (-1.0f);
+                    progress.deg = 0.0f;
+                    break;
+                case Swing_Hop:
+                    progress.pitch = fabs(_Pitch * sin(dur * M_PI));
+                    if (progress.deg < 0.0f)
+                        progress.roll = _Roll * sin(dur * M_PI);
+                    else
+                        progress.roll = _Roll * sin(dur * M_PI) * (-1.0f);
+                    break;
+                default:
+                    progress.pitch = fabs(_Pitch * sin(dur * M_PI)) * (-1.0f);
+                    if (progress.deg < 0.0f)
+                        progress.roll = _Roll * sin(dur * M_PI);
+                    else
+                        progress.roll = _Roll * sin(dur * M_PI) * (-1.0f);
+                    break;
+            }
         }
     }
     return progress;
@@ -707,72 +647,7 @@ static NSArray * jumpOptions;
     return progress;
 }
 
-- (GLdouble) getSpinProgress
-{
-    NSTimeInterval StartTime   = (NSTimeInterval) self.inputSpinStartTime;
-    NSTimeInterval EndTime     = (NSTimeInterval) self.inputSpinEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
-    GLdouble progress = 0.0f;
-    
-    if (EndTime > StartTime)
-    {
-        if (CurrentTime >= StartTime && CurrentTime <= EndTime)
-        {
-            progress = (CurrentTime - StartTime) / (EndTime - StartTime);
-        }
-        else
-        {
-            progress = (CurrentTime > EndTime) ? 1.0f : 0.0f;
-        }
-    }
-    return progress;
-}
-
-- (SSDistance) getJumpLead
-{
-    NSTimeInterval StartTime   = (NSTimeInterval) self.inputJumpStartTime;
-    NSTimeInterval EndTime     = (NSTimeInterval) self.inputJumpEndTime;
-    NSTimeInterval CurrentTime = self.inputTime * MILISECPERSEC;
-    SSDistance jump = {0.0f, 0.0f, 0.0f};
-    
-    if ((EndTime > StartTime) &&  (_JumpDuration > 0.0f))
-    {
-        if (CurrentTime >= StartTime && CurrentTime <= EndTime)
-        {
-            double JumpRadian = fmod((NSTimeInterval)(CurrentTime - StartTime) / _JumpDuration, 1.0f);
-            double JumpRad2   = JumpRadian - (_JumpDuration2 / _JumpDuration);
-            JumpRad2  = JumpRad2 < 0.0f ? JumpRadian : fabs(JumpRad2 - (_JumpDuration2 / _JumpDuration));
-            JumpRad2 *= _JumpDuration / _JumpDuration2;
-            switch (self.inputJumpStyle) {
-                case Jump_Mirror:
-                    jump.x = JumpRad2 * _xLeads;
-                    jump.y = JumpRad2 * _yLeads;
-                    jump.z = JumpRad2 * _zLeads;
-                    break;
-                case Jump_Quad:
-                    jump.x = pow(JumpRad2, 3) * _xLeads;
-                    jump.y = pow(JumpRad2, 3) * _yLeads;
-                    jump.z = pow(JumpRad2, 3) * _zLeads;
-                   break;
-                case Jump_Flight:
-                    jump.x = (1.0f + (-1.0f * pow(1.0f - JumpRad2, 3))) * _xLeads;
-                    jump.y = (1.0f + (-1.0f * pow(1.0f - JumpRad2, 3))) * _yLeads;
-                    jump.z = (1.0f + (-1.0f * pow(1.0f - JumpRad2, 3))) * _zLeads;
-                    break;
-                default:
-                    JumpRadian *= M_PI;
-                    jump.x = sin(JumpRadian) * _xLeads;
-                    jump.y = sin(JumpRadian) * _yLeads;
-                    jump.z = sin(JumpRadian) * _zLeads;
-                    break;
-            }
-        }
-    }
-    
-    return jump;
-}
-
-- (void)drawTexture:(id <QCPlugInContext>)context ScreenSpec:(NSRect)scSpec
+- (void)drawTexture:(id <QCPlugInContext>)context aTime:(NSTimeInterval)current ScreenSpec:(NSRect)scSpec
 {
     CGLContextObj cgl_ctx = [context CGLContextObj];
     
@@ -784,10 +659,18 @@ static NSArray * jumpOptions;
     glTranslated(x, y, 0.0f);
     
     // Rotate the matrix
-    GLdouble spin_progress = [self getSpinProgress];
+    SSSwing swing_progress = [self getSwingProgress];
+    glRotated(swing_progress.deg, 0.0f, 0.0f, 1.0f);
+
+#if 0
     GLdouble     ax = self.inputXAngleStart + (_X_rotation * spin_progress);
     GLdouble     ay = self.inputYAngleStart + (_Y_rotation * spin_progress);
-    GLdouble     az = self.inputZAngleStart + (_Z_rotation * spin_progress);
+    GLdouble     az = self.inputZAngleStart + (_Z_rotation * spin_progress);    SSProgress progress = [self getSlideProgress];
+    NSRect bounds = [context bounds];
+    GLdouble x = _xPosStart + (_X_distance * progress.x);
+    GLdouble y = _yPosStart + (_Y_distance * progress.y);
+    glTranslated(x, y, 0.0f);
+
     GLfloat   rad_x = GLKMathDegreesToRadians((float) self.inputXAxis);
     GLfloat   rad_y = GLKMathDegreesToRadians((float) self.inputYAxis);
     GLfloat   rad_z = GLKMathDegreesToRadians((float) self.inputZAxis);
@@ -803,7 +686,8 @@ static NSArray * jumpOptions;
     vec_y = sin(rad_x) * cos(rad_y);
     vec_z = cos(rad_x) * cos(rad_y);
     glRotated(az, vec_x, vec_y, vec_z);
-    
+#endif
+
     // Scale the matrix
     GLdouble scale_progress = [self getScaleProgress];
     GLdouble     sx = (self.inputXScaleStart / PERCENTAGE) + (_X_scale * scale_progress);
@@ -854,10 +738,9 @@ static NSArray * jumpOptions;
     }
     glColor4f(red, green, blue, alpha);
     // New Position
-    SSDistance jump = [self getJumpLead];
-    GLdouble     nx = (bounds.origin.x + _xPosStart - _xAnchor + (_X_distance * progress.x) + jump.x);
-    GLdouble     ny = (bounds.origin.y + _yPosStart - _yAnchor + (_Y_distance * progress.y) + jump.y);
-    GLdouble     nz = (_zPosStart + (_Z_distance * progress.z) + jump.z);
+    GLdouble     nx = (bounds.origin.x + _xPosStart - _xAnchor + (_X_distance * progress.x)) + swing_progress.roll;
+    GLdouble     ny = (bounds.origin.y + _yPosStart - _yAnchor + (_Y_distance * progress.y)) + swing_progress.pitch;
+    GLdouble     nz = (_zPosStart + (_Z_distance * progress.z));
     
     // Render the textured quad by mapping the texture coordinates to the vertices
     glBegin(GL_QUADS);
@@ -942,7 +825,7 @@ static NSArray * jumpOptions;
     [self setupExecute:context ScreenSpec:scsize];
     
     // テクスチャを描画
-    [self drawTexture:context ScreenSpec:scsize];
+    [self drawTexture:context aTime:time ScreenSpec:scsize];
     
     // Unbind the texture from the texture unit.
     if (textureName)
@@ -972,8 +855,8 @@ static NSArray * jumpOptions;
         [context logMessage:@"OpenGL error %04X", error];
         return NO;
     }
-    
-    return YES;
+	
+	return YES;
 }
 
 - (void)disableExecution:(id <QCPlugInContext>)context
