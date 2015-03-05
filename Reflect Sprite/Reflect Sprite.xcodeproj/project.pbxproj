@@ -1,0 +1,274 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A47C502D1A88F8F9003CF71A /* Reflect_SpritePlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = A47C502C1A88F8F9003CF71A /* Reflect_SpritePlugIn.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A47C50261A88F8F9003CF71A /* Reflect Sprite.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Reflect Sprite.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A47C502A1A88F8F9003CF71A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A47C502B1A88F8F9003CF71A /* Reflect_SpritePlugIn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Reflect_SpritePlugIn.h; sourceTree = "<group>"; };
+		A47C502C1A88F8F9003CF71A /* Reflect_SpritePlugIn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Reflect_SpritePlugIn.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A47C50221A88F8F9003CF71A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A47C501C1A88F8F9003CF71A = {
+			isa = PBXGroup;
+			children = (
+				A47C50281A88F8F9003CF71A /* Reflect Sprite */,
+				A47C50271A88F8F9003CF71A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A47C50271A88F8F9003CF71A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A47C50261A88F8F9003CF71A /* Reflect Sprite.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A47C50281A88F8F9003CF71A /* Reflect Sprite */ = {
+			isa = PBXGroup;
+			children = (
+				A47C502B1A88F8F9003CF71A /* Reflect_SpritePlugIn.h */,
+				A47C502C1A88F8F9003CF71A /* Reflect_SpritePlugIn.m */,
+				A47C50291A88F8F9003CF71A /* Supporting Files */,
+			);
+			path = "Reflect Sprite";
+			sourceTree = "<group>";
+		};
+		A47C50291A88F8F9003CF71A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A47C502A1A88F8F9003CF71A /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A47C50251A88F8F9003CF71A /* Reflect Sprite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A47C50301A88F8F9003CF71A /* Build configuration list for PBXNativeTarget "Reflect Sprite" */;
+			buildPhases = (
+				A47C50211A88F8F9003CF71A /* Sources */,
+				A47C50221A88F8F9003CF71A /* Frameworks */,
+				A47C50231A88F8F9003CF71A /* Resources */,
+				A47C50241A88F8F9003CF71A /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Reflect Sprite";
+			productName = "Reflect Sprite";
+			productReference = A47C50261A88F8F9003CF71A /* Reflect Sprite.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A47C501D1A88F8F9003CF71A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Koichi MATSUMOTO";
+				TargetAttributes = {
+					A47C50251A88F8F9003CF71A = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = A47C50201A88F8F9003CF71A /* Build configuration list for PBXProject "Reflect Sprite" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A47C501C1A88F8F9003CF71A;
+			productRefGroup = A47C50271A88F8F9003CF71A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A47C50251A88F8F9003CF71A /* Reflect Sprite */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A47C50231A88F8F9003CF71A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A47C50241A88F8F9003CF71A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This shell script simply copies the built plug-in to \"~/Library/Graphics/Quartz Composer Plug-Ins\" and overrides any previous version at that location\n\nmkdir -p \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins\"\nrm -rf \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/Reflect Sprite.plugin\"\ncp -rf \"$BUILT_PRODUCTS_DIR/Reflect Sprite.plugin\" \"$USER_LIBRARY_DIR/Graphics/Quartz Composer Plug-Ins/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A47C50211A88F8F9003CF71A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A47C502D1A88F8F9003CF71A /* Reflect_SpritePlugIn.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A47C502E1A88F8F9003CF71A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A47C502F1A88F8F9003CF71A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A47C50311A88F8F9003CF71A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Reflect Sprite/Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		A47C50321A88F8F9003CF71A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Reflect Sprite/Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Graphics/Quartz Composer Plug-Ins";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A47C50201A88F8F9003CF71A /* Build configuration list for PBXProject "Reflect Sprite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A47C502E1A88F8F9003CF71A /* Debug */,
+				A47C502F1A88F8F9003CF71A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A47C50301A88F8F9003CF71A /* Build configuration list for PBXNativeTarget "Reflect Sprite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A47C50311A88F8F9003CF71A /* Debug */,
+				A47C50321A88F8F9003CF71A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A47C501D1A88F8F9003CF71A /* Project object */;
+}
