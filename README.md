@@ -18,8 +18,8 @@ Mac 用紙芝居動画作成支援アプリ、「[絵解き帳] [1]」の追加�
 ```Fade.qtz```| ```~/Library/Compositions/```
 ```Foggy.qtz```| ```~/Library/Compositions/```
 ```Gleam.qtz```| ```~/Library/Compositions/```
-* ```Move Image.qtz```| ```~/Library/Compositions/```
-* ```Move.qtz```| ```~/Library/Compositions/```
+```Move Image.qtz```| ```~/Library/Compositions/```
+```Move.qtz```| ```~/Library/Compositions/```
 ```Page Curl.qtz```| ```~/Library/Compositions/```
 ```Particle System.qtz```| ```~/Library/Compositions/```
 ```Scroll.qtz```| ```~/Library/Compositions/```
